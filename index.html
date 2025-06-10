@@ -6,71 +6,71 @@
   <style>
     html, body {
       margin: 0; padding: 0;
-      background: #000; color: #fff;
-      font-family: sans-serif;
-      overflow: hidden;
       height: 100%;
+      overflow: hidden;
+      background: #000;
+      color: #fff;
+      font-family: sans-serif;
     }
-
     .background {
-      position: fixed; top: -10%; left: -10%;
-      width: 120%; height: 120%;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       background: url('mountains.jpg') center/cover no-repeat;
-      filter: brightness(0.8) blur(2px);
+      filter: brightness(0.8) blur(0);
       will-change: transform, filter;
       z-index: 0;
       pointer-events: none;
-      transform: scale(1.1);
-      transition: transform 0.1s ease-out;
+      transition: filter 0.3s ease;
     }
-
     .logo-container {
-      position: fixed; top: 40px; left: 50%;
+      position: fixed;
+      top: 40px;
+      left: 50%;
       transform: translateX(-50%);
       z-index: 10;
       pointer-events: auto;
       animation: pulse 3s infinite ease-in-out;
+      opacity: 1;
+      transition: opacity 0.3s ease;
     }
-
     @keyframes pulse {
       0%, 100% { transform: translateX(-50%) scale(1); }
       50% { transform: translateX(-50%) scale(1.1); }
     }
-
     .logo {
       width: 280px;
       user-select: none;
       cursor: pointer;
       transition: filter 0.3s ease;
+      display: block;
     }
-
     .logo.clicked {
       filter: drop-shadow(0 0 35px #ffffffaa);
     }
-
     .content {
       position: absolute;
       top: 550px;
+      left: 50%;
+      transform: translateX(-50%) translateY(0);
       display: flex;
       justify-content: center;
       gap: 120px;
       width: 100%;
+      max-width: 1200px;
       z-index: 5;
-      transition: transform 0.1s ease-out;
+      transition: transform 0.3s ease;
     }
-
     .block {
       width: 400px;
       text-align: center;
     }
-
     .block h1 {
       font-size: 32px;
       margin-bottom: 10px;
       border-bottom: 2px solid white;
       padding-bottom: 5px;
     }
-
     .block .lines {
       font-size: 18px;
       margin: 20px 0;
@@ -78,7 +78,6 @@
       flex-direction: column;
       gap: 8px;
     }
-
     .block img {
       width: 300px;
       height: 300px;
@@ -89,8 +88,8 @@
       perspective: 800px;
       transition: transform 0.3s ease;
       cursor: grab;
+      user-select: none;
     }
-
     .star {
       position: fixed;
       background: white;
@@ -100,15 +99,16 @@
       pointer-events: none;
       z-index: 1;
     }
-
     @keyframes twinkle {
       0%, 100% { opacity: 0.8; }
       50%      { opacity: 0.2; }
     }
-
     .light-bar {
-      position: fixed; bottom: 0; left: 0;
-      width: 100%; height: 80px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
       background: linear-gradient(90deg,
         rgba(255,255,255,0) 0%,
         rgba(255,255,255,.4) 50%,
@@ -118,7 +118,6 @@
       pointer-events: none;
       z-index: 2;
     }
-
     @keyframes slideLight {
       0%   { background-position: 0 0; }
       100% { background-position: 200% 0; }
@@ -160,86 +159,81 @@
     const content = document.getElementById('content');
     const mainLogo = document.getElementById('mainLogo');
 
-    // Mouse Move Parallax
-    document.addEventListener('mousemove', e => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 20;
-      const y = (e.clientY / window.innerHeight - 0.5) * 20;
-
-      bg.style.transform = `scale(1.1) translate(${x * -0.5}px, ${y * -0.5}px)`;
-      logoContainer.style.transform = `translateX(-50%) translate(${x}px, ${y}px)`;
-      content.style.transform = `translate(${x * 0.5}px, ${y * 0.5}px)`;
-    });
-
-    // Smooth Scroll Setup
+    // Smooth scroll variables
     let targetScroll = 0;
     let currentScroll = 0;
+    const maxScroll = 400; // می‌توانید مقدار دلخواه بگذارید
+
+    // Handle mouse wheel event for smooth scroll
+    window.addEventListener('wheel', e => {
+      e.preventDefault();
+      targetScroll += e.deltaY * 0.5;
+      if (targetScroll < 0) targetScroll = 0;
+      if (targetScroll > maxScroll) targetScroll = maxScroll;
+
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateScroll);
+      }
+    }, { passive: false });
+
     let ticking = false;
+    function updateScroll() {
+      const diff = targetScroll - currentScroll;
+      currentScroll += diff * 0.1;
+      if (Math.abs(diff) < 0.1) currentScroll = targetScroll;
 
-    const maxScroll = 300; // سقف اسکرول محدود به 300 پیکسل (مقدار دلخواه)
-
-    function smoothScroll() {
-      const dist = targetScroll - currentScroll;
-      currentScroll += dist * 0.1;
-      if (Math.abs(dist) < 0.5) currentScroll = targetScroll;
-
+      // Scroll the window (even if overflow:hidden, just for semantics)
       window.scrollTo(0, currentScroll);
 
-      // اپاسیتی لوگو
-      const opacity = Math.max(0, 1 - currentScroll / 300);
-      logoContainer.style.opacity = opacity;
+      // Opacity logo fades out
+      logoContainer.style.opacity = Math.max(0, 1 - currentScroll / maxScroll);
 
-      // بلور و زوم بکگراند
-      const blur = Math.min(8, currentScroll / 100);
-      bg.style.filter = `brightness(0.8) blur(${blur}px)`;
-      bg.style.transform = `scale(1.1) translate(0, ${currentScroll / -20}px)`;
+      // Background blur and zoom
+      const blurVal = (currentScroll / maxScroll) * 6;
+      const scaleVal = 1 + (currentScroll / maxScroll) * 0.1;
+      bg.style.filter = `brightness(0.8) blur(${blurVal}px)`;
+      bg.style.transform = `scale(${scaleVal}) translateY(${-currentScroll / 15}px)`;
 
-      // محتوا
-      content.style.transform = `translate(0, ${currentScroll * 0.5}px)`;
+      // Move content down slightly
+      content.style.transform = `translateX(-50%) translateY(${currentScroll * 0.6}px)`;
 
       if (currentScroll !== targetScroll) {
-        requestAnimationFrame(smoothScroll);
+        requestAnimationFrame(updateScroll);
       } else {
         ticking = false;
       }
     }
 
-    window.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      targetScroll += e.deltaY * 0.3;
-      targetScroll = Math.max(0, Math.min(targetScroll, maxScroll));
-
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(smoothScroll);
-      }
-    }, { passive: false });
-
+    // Logo click effect
     mainLogo.addEventListener('click', () => {
       mainLogo.classList.add('clicked');
       setTimeout(() => mainLogo.classList.remove('clicked'), 400);
     });
 
+    // Star animation
     function makeStar() {
-      const s = document.createElement('div');
-      s.className = 'star';
+      const star = document.createElement('div');
+      star.className = 'star';
       const size = Math.random() * 3 + 1;
-      s.style.width = s.style.height = size + 'px';
-      s.style.top = Math.random() * window.innerHeight + 'px';
-      s.style.left = Math.random() * window.innerWidth + 'px';
-      s.style.animationDuration = (Math.random() * 3 + 2) + 's';
-      document.body.appendChild(s);
-      setTimeout(() => s.remove(), 8000);
+      star.style.width = star.style.height = size + 'px';
+      star.style.top = Math.random() * window.innerHeight + 'px';
+      star.style.left = Math.random() * window.innerWidth + 'px';
+      star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      document.body.appendChild(star);
+      setTimeout(() => star.remove(), 8000);
     }
     setInterval(makeStar, 300);
 
+    // Image tilt effect on mouse move
     ['imgArvand', 'imgMmd'].forEach(id => {
       const img = document.getElementById(id);
       img.addEventListener('mousemove', e => {
-        const r = img.getBoundingClientRect();
-        const x = e.clientX - r.left;
-        const y = e.clientY - r.top;
-        const rx = ((x - r.width / 2) / r.width) * 30;
-        const ry = ((y - r.height / 2) / r.height) * -30;
+        const rect = img.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const rx = ((x - rect.width / 2) / rect.width) * 30;
+        const ry = ((y - rect.height / 2) / rect.height) * -30;
         img.style.transform = `perspective(800px) rotateY(${rx}deg) rotateX(${ry}deg) scaleX(-1)`;
       });
       img.addEventListener('mouseleave', () => {
