@@ -4,38 +4,24 @@
   <meta charset="UTF-8" />
   <title>SarvSiah</title>
   <style>
-    html, body {
+    /* ۱. کل صفحه بک‌گراند ثابت بگیر */
+    html {
+      background: url('mountains.jpg') center top / cover no-repeat fixed;
+    }
+    body {
       margin: 0;
       padding: 0;
       height: 100%;
       overflow-x: hidden;
       overflow-y: auto;
       scroll-behavior: smooth;
-      background: #000;
+      background: transparent;  /* تا سیاهی html پوشیده نشود */
       color: #fff;
       font-family: sans-serif;
-    }
-
-    body {
       perspective: 1000px;
     }
 
-    /* بک‌گراند کوه‌ها همیشه ثابت */
-    .background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('mountains.jpg') center top / cover no-repeat;
-      background-attachment: fixed;
-      filter: brightness(0.8) blur(2px);
-      transform: scale(1.1);
-      z-index: 0;
-      pointer-events: none;
-      transition: transform 0.1s ease-out, filter 0.1s ease-out;
-    }
-
+    /* ۲. لوگو و افکت‌ها */
     .logo-container {
       position: fixed;
       top: 40px;
@@ -58,6 +44,7 @@
       filter: drop-shadow(0 0 35px #ffffffaa);
     }
 
+    /* ۳. محتوا */
     .content {
       margin-top: 600px;
       display: flex;
@@ -95,6 +82,7 @@
       transform-style: preserve-3d;
     }
 
+    /* ۴. ستاره و نوار نور */
     .star {
       position: fixed;
       background: white;
@@ -108,7 +96,6 @@
       0%,100% { opacity: 0.8; }
       50%     { opacity: 0.2; }
     }
-
     .light-bar {
       position: fixed;
       bottom: 0;
@@ -131,9 +118,6 @@
   </style>
 </head>
 <body>
-  <div class="background" id="bg"></div>
-  <div class="light-bar"></div>
-
   <div class="logo-container">
     <img src="SarvSiah.jpg" alt="SarvSiah Logo" class="logo" id="mainLogo" />
   </div>
@@ -148,6 +132,7 @@
       </div>
       <img src="Arvand.jpg" id="imgArvand" alt="Arvand Image" />
     </div>
+
     <div class="block">
       <h1>Mamad</h1>
       <div class="lines">
@@ -159,19 +144,9 @@
   </div>
 
   <script>
-    const bg = document.getElementById('bg');
     const mainLogo = document.getElementById('mainLogo');
 
-    // با اسکرول زوم و بلور بک‌گراند را بیشتر می‌کنیم
-    window.addEventListener('scroll', () => {
-      const sc = window.scrollY;
-      const scale = 1.1 + sc * 0.0005;      // ضریب زوم
-      const blur  = 2 + sc * 0.01;          // ضریب بلور
-      bg.style.transform = `scale(${scale})`;
-      bg.style.filter = `brightness(0.8) blur(${blur}px)`;
-    });
-
-    // افکت کلیک روی لوگو
+    // کلیک روی لوگو
     mainLogo.addEventListener('click', () => {
       mainLogo.classList.add('clicked');
       setTimeout(() => mainLogo.classList.remove('clicked'), 400);
@@ -196,7 +171,8 @@
       const img = document.getElementById(id);
       img.addEventListener('mousemove', e => {
         const r = img.getBoundingClientRect();
-        const x = e.clientX - r.left, y = e.clientY - r.top;
+        const x = e.clientX - r.left;
+        const y = e.clientY - r.top;
         const rx = ((x - r.width/2) / r.width) * 30;
         const ry = ((y - r.height/2) / r.height) * -30;
         img.style.transform = `perspective(800px) rotateY(${rx}deg) rotateX(${ry}deg)`;
@@ -204,6 +180,15 @@
       img.addEventListener('mouseleave', () => {
         img.style.transform = 'rotateY(0deg) rotateX(0deg)';
       });
+    });
+
+    // با اسکرول زوم و بلور بک‌گراند
+    window.addEventListener('scroll', () => {
+      const sc = window.scrollY;
+      // این خطوط باعث می‌شوند html { background-attachment: fixed } همچنان کار کند،
+      // اما با تغییر CSS متغیر --bg-scale و --bg-blur می‌توانیم زوم/بلور را کنترل کنیم:
+      document.documentElement.style.setProperty('--bg-scale', `${1 + sc * 0.0005}`);
+      document.documentElement.style.setProperty('--bg-blur', `${2 + sc * 0.01}px`);
     });
   </script>
 </body>
