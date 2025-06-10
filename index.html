@@ -165,9 +165,9 @@
       const x = (e.clientX / window.innerWidth - 0.5) * 20;
       const y = (e.clientY / window.innerHeight - 0.5) * 20;
 
-      bg.style.transform = scale(1.1) translate(${x * -0.5}px, ${y * -0.5}px);
-      logoContainer.style.transform = translateX(-50%) translate(${x}px, ${y}px);
-      content.style.transform = translate(${x * 0.5}px, ${y * 0.5}px);
+      bg.style.transform = `scale(1.1) translate(${x * -0.5}px, ${y * -0.5}px)`;
+      logoContainer.style.transform = `translateX(-50%) translate(${x}px, ${y}px)`;
+      content.style.transform = `translate(${x * 0.5}px, ${y * 0.5}px)`;
     });
 
     // Smooth Scroll Setup
@@ -188,8 +188,8 @@
       logoContainer.style.opacity = opacity;
 
       const blur = Math.min(8, currentScroll / 100);
-      bg.style.filter = blur(${blur}px) brightness(0.8);
-      bg.style.transform = scale(1.1) translate(0, ${currentScroll / -20}px);
+      bg.style.filter = `blur(${blur}px) brightness(0.8)`;
+      bg.style.transform = `scale(1.1) translate(0, ${currentScroll / -20}px)`;
 
       if (currentScroll !== targetScroll) {
         requestAnimationFrame(smoothScroll);
@@ -235,7 +235,7 @@
         const y = e.clientY - r.top;
         const rx = ((x - r.width / 2) / r.width) * 30;
         const ry = ((y - r.height / 2) / r.height) * -30;
-        img.style.transform = perspective(800px) rotateY(${rx}deg) rotateX(${ry}deg) scaleX(-1);
+        img.style.transform = `perspective(800px) rotateY(${rx}deg) rotateX(${ry}deg) scaleX(-1)`;
       });
       img.addEventListener('mouseleave', () => {
         img.style.transform = 'scaleX(-1)';
