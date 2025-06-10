@@ -1,252 +1,106 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8" />
-  <title>SarvSiah</title>
-  <style>
-    html, body {
-      margin: 0; padding: 0;
-      background: #000; color: #fff;
-      font-family: sans-serif;
-      overflow: hidden;
-      height: 100%;
-    }
-
-    .background {
-      position: fixed; top: -10%; left: -10%;
-      width: 120%; height: 120%;
-      background: url('mountains.jpg') center/cover no-repeat;
-      filter: brightness(0.8) blur(2px);
-      will-change: transform, filter;
-      z-index: 0;
-      pointer-events: none;
-      transform: scale(1.1);
-      transition: transform 0.1s ease-out;
-    }
-
-    .logo-container {
-      position: fixed; top: 40px; left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      pointer-events: auto;
-      animation: pulse 3s infinite ease-in-out;
-      transition: opacity 0.3s ease;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: translateX(-50%) scale(1); }
-      50% { transform: translateX(-50%) scale(1.1); }
-    }
-
-    .logo {
-      width: 280px;
-      user-select: none;
-      cursor: pointer;
-      transition: filter 0.3s ease;
-    }
-
-    .logo.clicked {
-      filter: drop-shadow(0 0 35px #ffffffaa);
-    }
-
-    .content {
-      position: fixed;
-      top: 550px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      justify-content: center;
-      gap: 120px;
-      width: 100%;
-      z-index: 5;
-      transition: transform 0.1s ease-out;
-      pointer-events: auto;
-    }
-
-    .block {
-      width: 400px;
-      text-align: center;
-    }
-
-    .block h1 {
-      font-size: 32px;
-      margin-bottom: 10px;
-      border-bottom: 2px solid white;
-      padding-bottom: 5px;
-    }
-
-    .block .lines {
-      font-size: 18px;
-      margin: 20px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .block img {
-      width: 300px;
-      height: 300px;
-      border-radius: 20px;
-      object-fit: cover;
-      box-shadow: 0 0 15px rgba(255,255,255,0.6);
-      transform: scaleX(-1);
-      perspective: 800px;
-      transition: transform 0.3s ease;
-      cursor: grab;
-      user-select: none;
-    }
-
-    .star {
-      position: fixed;
-      background: white;
-      border-radius: 50%;
-      opacity: 0.8;
-      animation: twinkle infinite ease-in-out;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.8; }
-      50%      { opacity: 0.2; }
-    }
-
-    .light-bar {
-      position: fixed; bottom: 0; left: 0;
-      width: 100%; height: 80px;
-      background: linear-gradient(90deg,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,.4) 50%,
-        rgba(255,255,255,0) 100%);
-      filter: blur(10px);
-      animation: slideLight 5s linear infinite;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    @keyframes slideLight {
-      0%   { background-position: 0 0; }
-      100% { background-position: 200% 0; }
-    }
-  </style>
+<meta charset="UTF-8" />
+<title>Smooth Scroll Background</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; height: 100%; overflow: hidden;
+    background: black;
+    color: white;
+    font-family: sans-serif;
+  }
+  .background {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: url('mountains.jpg') center/cover no-repeat;
+    filter: brightness(0.8);
+    will-change: transform, filter;
+    z-index: 0;
+    pointer-events: none;
+    transform-origin: center top;
+  }
+  .content {
+    position: relative;
+    width: 100%;
+    height: 3000px; /* بیشتر از صفحه برای اسکرول */
+    z-index: 5;
+    padding-top: 100vh; /* فاصله برای مشاهده بکگراند */
+    box-sizing: border-box;
+    text-align: center;
+  }
+  .logo {
+    position: fixed;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    cursor: pointer;
+    width: 280px;
+    user-select: none;
+  }
+  .block {
+    margin: 50px auto;
+    max-width: 400px;
+  }
+  .block img {
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(255,255,255,0.6);
+    transform: scaleX(-1);
+    cursor: grab;
+  }
+</style>
 </head>
 <body>
-  <div class="background" id="bg"></div>
-  <div class="light-bar"></div>
 
-  <div class="logo-container" id="logoContainer">
-    <img src="SarvSiah.jpg" alt="SarvSiah Logo" class="logo" id="mainLogo" />
+<div class="background" id="background"></div>
+
+<img src="SarvSiah.jpg" alt="Logo" class="logo" id="logo">
+
+<div class="content" id="content">
+  <div class="block">
+    <h1>Arvand</h1>
+    <p>This bro is awsome<br>The Best<br>The Strongest</p>
+    <img src="Arvand.jpg" alt="Arvand Image" />
   </div>
-
-  <div class="content" id="content">
-    <div class="block">
-      <h1>Arvand</h1>
-      <div class="lines">
-        <div>This bro is awsom</div>
-        <div>The Best</div>
-        <div>The Strongest</div>
-      </div>
-      <img src="Arvand.jpg" id="imgArvand" alt="Arvand Image" />
-    </div>
-
-    <div class="block">
-      <h1>Mamad</h1>
-      <div class="lines">
-        <div>This guy is just a good boy</div>
-        <div>Loved Allah</div>
-      </div>
-      <img src="mmd.jpg" id="imgMmd" alt="Mamad Image" />
-    </div>
+  <div class="block">
+    <h1>Mamad</h1>
+    <p>This guy is just a good boy<br>Loved Allah</p>
+    <img src="mmd.jpg" alt="Mamad Image" />
   </div>
+</div>
 
-  <script>
-    const bg = document.getElementById('bg');
-    const logoContainer = document.getElementById('logoContainer');
-    const content = document.getElementById('content');
-    const mainLogo = document.getElementById('mainLogo');
+<script>
+  const bg = document.getElementById('background');
+  let scrollPos = 0;
+  let targetScroll = 0;
 
-    // Scroll variables
-    let scrollTarget = 0;
-    let scrollCurrent = 0;
-    const maxScroll = 2000;
+  window.addEventListener('wheel', e => {
+    e.preventDefault();
+    targetScroll += e.deltaY;
+    if (targetScroll < 0) targetScroll = 0;
+    if (targetScroll > 2000) targetScroll = 2000;
+  }, { passive: false });
 
-    // Mouse Move Parallax
-    document.addEventListener('mousemove', e => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 20;
-      const y = (e.clientY / window.innerHeight - 0.5) * 20;
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
 
-      bg.style.transform = `scale(1.1) translate(${x * -0.5}px, ${y * -0.5}px) translateY(${-scrollCurrent / 20}px)`;
-      logoContainer.style.transform = `translateX(-50%) translate(${x}px, ${y}px)`;
-      content.style.transform = `translateX(-50%) translate(${x * 0.5}px, ${y * 0.5 + scrollCurrent * 0.7}px)`;
-    });
+  function animate() {
+    scrollPos = lerp(scrollPos, targetScroll, 0.1);
 
-    // Wheel scroll listener
-    window.addEventListener('wheel', e => {
-      e.preventDefault();
-      scrollTarget += e.deltaY;
-      scrollTarget = Math.max(0, Math.min(scrollTarget, maxScroll));
-    }, { passive: false });
+    // بکگراند زوم و بلور به نسبت اسکرول
+    const zoom = 1 + scrollPos / 3000; // حدود 1 تا 1.66
+    const blur = scrollPos / 300;     // حدود 0 تا 6.6 px
 
-    // Linear interpolation helper
-    function lerp(start, end, t) {
-      return start + (end - start) * t;
-    }
+    bg.style.transform = `scale(${zoom}) translateY(${-scrollPos * 0.3}px)`;
+    bg.style.filter = `brightness(0.8) blur(${blur}px)`;
 
-    // Animation loop
-    function animate() {
-      scrollCurrent = lerp(scrollCurrent, scrollTarget, 0.08);
+    requestAnimationFrame(animate);
+  }
 
-      // Logo opacity
-      logoContainer.style.opacity = Math.max(0, 1 - scrollCurrent / maxScroll);
+  animate();
+</script>
 
-      // Background blur & brightness
-      const blur = (scrollCurrent / maxScroll) * 10;
-      const brightness = 0.8;
-      const scale = 1 + (scrollCurrent / maxScroll) * 0.15;
-
-      bg.style.filter = `brightness(${brightness}) blur(${blur}px)`;
-      // bg transform updated in mousemove for parallax + scrollY
-
-      requestAnimationFrame(animate);
-    }
-
-    animate();
-
-    // Logo click glow effect
-    mainLogo.addEventListener('click', () => {
-      mainLogo.classList.add('clicked');
-      setTimeout(() => mainLogo.classList.remove('clicked'), 400);
-    });
-
-    // Star generator
-    function makeStar() {
-      const s = document.createElement('div');
-      s.className = 'star';
-      const size = Math.random() * 3 + 1;
-      s.style.width = s.style.height = size + 'px';
-      s.style.top = Math.random() * window.innerHeight + 'px';
-      s.style.left = Math.random() * window.innerWidth + 'px';
-      s.style.animationDuration = (Math.random() * 3 + 2) + 's';
-      document.body.appendChild(s);
-      setTimeout(() => s.remove(), 8000);
-    }
-    setInterval(makeStar, 300);
-
-    // Image tilt effect
-    ['imgArvand', 'imgMmd'].forEach(id => {
-      const img = document.getElementById(id);
-      img.addEventListener('mousemove', e => {
-        const r = img.getBoundingClientRect();
-        const x = e.clientX - r.left;
-        const y = e.clientY - r.top;
-        const rx = ((x - r.width / 2) / r.width) * 30;
-        const ry = ((y - r.height / 2) / r.height) * -30;
-        img.style.transform = `perspective(800px) rotateY(${rx}deg) rotateX(${ry}deg) scaleX(-1)`;
-      });
-      img.addEventListener('mouseleave', () => {
-        img.style.transform = 'scaleX(-1)';
-      });
-    });
-  </script>
 </body>
 </html>
