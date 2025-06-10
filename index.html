@@ -5,16 +5,26 @@
   <title>SarvSiah</title>
   <style>
     html, body {
-      margin: 0; padding: 0;
-      background: #000; color: #fff;
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #fff;
       font-family: sans-serif;
-      overflow: hidden;
       height: 100%;
+      scroll-behavior: smooth;
+      overflow-y: scroll;
+    }
+
+    body {
+      perspective: 1000px;
     }
 
     .background {
-      position: fixed; top: -10%; left: -10%;
-      width: 120%; height: 120%;
+      position: fixed;
+      top: -10%;
+      left: -10%;
+      width: 120%;
+      height: 120%;
       background: url('mountains.jpg') center/cover no-repeat;
       filter: brightness(0.8) blur(2px);
       will-change: transform, filter;
@@ -25,10 +35,11 @@
     }
 
     .logo-container {
-      position: fixed; top: 40px; left: 50%;
+      position: fixed;
+      top: 40px;
+      left: 50%;
       transform: translateX(-50%);
       z-index: 10;
-      pointer-events: auto;
       animation: pulse 3s infinite ease-in-out;
     }
 
@@ -49,14 +60,13 @@
     }
 
     .content {
-      position: absolute;
-      top: 550px;
+      margin-top: 600px;
       display: flex;
       justify-content: center;
       gap: 120px;
-      width: 100%;
+      padding-bottom: 1000px;
       z-index: 5;
-      transition: transform 0.1s ease-out;
+      position: relative;
     }
 
     .block {
@@ -85,10 +95,9 @@
       border-radius: 20px;
       object-fit: cover;
       box-shadow: 0 0 15px rgba(255,255,255,0.6);
-      transform: scaleX(-1);
-      perspective: 800px;
       transition: transform 0.3s ease;
       cursor: grab;
+      transform-style: preserve-3d;
     }
 
     .star {
@@ -107,8 +116,11 @@
     }
 
     .light-bar {
-      position: fixed; bottom: 0; left: 0;
-      width: 100%; height: 80px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
       background: linear-gradient(90deg,
         rgba(255,255,255,0) 0%,
         rgba(255,255,255,.4) 50%,
@@ -137,7 +149,7 @@
     <div class="block">
       <h1>Arvand</h1>
       <div class="lines">
-        <div>This bro is awsom</div>
+        <div>This bro is awesome</div>
         <div>The Best</div>
         <div>The Strongest</div>
       </div>
@@ -157,63 +169,24 @@
   <script>
     const bg = document.getElementById('bg');
     const logoContainer = document.getElementById('logoContainer');
-    const content = document.getElementById('content');
     const mainLogo = document.getElementById('mainLogo');
 
-    // Mouse Move Parallax
+    // Mouse parallax
     document.addEventListener('mousemove', e => {
       const x = (e.clientX / window.innerWidth - 0.5) * 20;
       const y = (e.clientY / window.innerHeight - 0.5) * 20;
 
       bg.style.transform = `scale(1.1) translate(${x * -0.5}px, ${y * -0.5}px)`;
       logoContainer.style.transform = `translateX(-50%) translate(${x}px, ${y}px)`;
-      content.style.transform = `translate(${x * 0.5}px, ${y * 0.5}px)`;
     });
 
-    // Smooth Scroll Setup
-    let targetScroll = 0;
-    let currentScroll = 0;
-    let ticking = false;
-
-    const maxScroll = document.body.scrollHeight - window.innerHeight;
-
-    function smoothScroll() {
-      const dist = targetScroll - currentScroll;
-      currentScroll += dist * 0.1;
-      if (Math.abs(dist) < 0.5) currentScroll = targetScroll;
-
-      window.scrollTo(0, currentScroll);
-
-      const opacity = Math.max(0, 1 - currentScroll / 300);
-      logoContainer.style.opacity = opacity;
-
-      const blur = Math.min(8, currentScroll / 100);
-      bg.style.filter = `blur(${blur}px) brightness(0.8)`;
-      bg.style.transform = `scale(1.1) translate(0, ${currentScroll / -20}px)`;
-
-      if (currentScroll !== targetScroll) {
-        requestAnimationFrame(smoothScroll);
-      } else {
-        ticking = false;
-      }
-    }
-
-    window.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      targetScroll += e.deltaY * 0.3;
-      targetScroll = Math.max(0, Math.min(targetScroll, maxScroll));
-
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(smoothScroll);
-      }
-    }, { passive: false });
-
+    // Logo click pulse
     mainLogo.addEventListener('click', () => {
       mainLogo.classList.add('clicked');
       setTimeout(() => mainLogo.classList.remove('clicked'), 400);
     });
 
+    // Star effect
     function makeStar() {
       const s = document.createElement('div');
       s.className = 'star';
@@ -227,6 +200,7 @@
     }
     setInterval(makeStar, 300);
 
+    // 3D Image Tilt
     ['imgArvand', 'imgMmd'].forEach(id => {
       const img = document.getElementById(id);
       img.addEventListener('mousemove', e => {
@@ -235,10 +209,10 @@
         const y = e.clientY - r.top;
         const rx = ((x - r.width / 2) / r.width) * 30;
         const ry = ((y - r.height / 2) / r.height) * -30;
-        img.style.transform = `perspective(800px) rotateY(${rx}deg) rotateX(${ry}deg) scaleX(-1)`;
+        img.style.transform = `perspective(800px) rotateY(${rx}deg) rotateX(${ry}deg)`;
       });
       img.addEventListener('mouseleave', () => {
-        img.style.transform = 'scaleX(-1)';
+        img.style.transform = 'rotateY(0deg) rotateX(0deg)';
       });
     });
   </script>
