@@ -8,8 +8,8 @@
     * { margin:0; padding:0; box-sizing:border-box; }
     html, body {
       height:100%;
-      overflow-x:hidden;          /* جلوگیری از اسکرول افقی */
-      scroll-behavior: smooth;    /* اسکرول نرم */
+      overflow-x:hidden;
+      scroll-behavior: smooth;
       font-family: sans-serif;
       background: #000;
       color: #fff;
@@ -21,9 +21,9 @@
       top: 0; left: 0;
       width:100%; height:100%;
       background: url('mountains.jpg') center top / cover no-repeat fixed;
-      transform: scale(1.2) translateX(0);
+      transform: scale(1.2);
       filter: brightness(0.8) blur(2px);
-      transition: transform .1s ease-out, filter .1s ease-out;
+      transition: transform 0.3s ease-out, filter 0.3s ease-out;
       z-index: 0;
       pointer-events: none;
     }
@@ -119,20 +119,13 @@
   <script>
     const bg      = document.getElementById('bg');
     const logo    = document.getElementById('mainLogo');
-    let baseScale = 1.2;
 
-    // ۳. پارالاکس موس: فقط بک‌گراند روی X حرکت می‌کند
-    document.addEventListener('mousemove', e => {
-      const offsetX = (e.clientX / window.innerWidth - 0.5) * 30; 
-      bg.style.transform = `scale(${baseScale}) translateX(${offsetX}px)`;
-    });
-
-    // ۴. زوم و بلور با اسکرول
+    // فقط: زوم و بلور بک‌گراند با اسکرول
     window.addEventListener('scroll', () => {
       const sc    = window.scrollY;
-      baseScale   = 1.2 + sc * 0.0008;    // افزایش مقیاس با اسکرول
-      const blur  = 2 + sc * 0.02;        // افزایش بلور با اسکرول
-      bg.style.transform = `scale(${baseScale}) translateX(0)`;
+      const scale = 1.2 + sc * 0.0005;   // ضریب زوم
+      const blur  = 2   + sc * 0.01;     // ضریب بلور
+      bg.style.transform = `scale(${scale})`;
       bg.style.filter    = `brightness(0.8) blur(${blur}px)`;
     });
 
@@ -149,8 +142,8 @@
         const r  = img.getBoundingClientRect();
         const x  = e.clientX - r.left;
         const y  = e.clientY - r.top;
-        const rx = ((x - r.width/2) / r.width) * 30;
-        const ry = ((y - r.height/2) / r.height) * -30;
+        const rx = ((x - r.width/2)/r.width)*30;
+        const ry = ((y - r.height/2)/r.height)*-30;
         img.style.transform = `perspective(800px) rotateY(${rx}deg) rotateX(${ry}deg)`;
       });
       img.addEventListener('mouseleave', () => {
