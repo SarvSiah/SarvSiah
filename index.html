@@ -8,7 +8,7 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      overflow-x: hidden;    /* جلوگیری از اسکرول افقی */
+      overflow-x: hidden;
       overflow-y: auto;
       scroll-behavior: smooth;
       background: #000;
@@ -20,7 +20,7 @@
       perspective: 1000px;
     }
 
-    /* بک‌گراند کاملاً ثابت */
+    /* بک‌گراند کوه‌ها همیشه ثابت */
     .background {
       position: fixed;
       top: 0;
@@ -30,8 +30,10 @@
       background: url('mountains.jpg') center top / cover no-repeat;
       background-attachment: fixed;
       filter: brightness(0.8) blur(2px);
+      transform: scale(1.1);
       z-index: 0;
       pointer-events: none;
+      transition: transform 0.1s ease-out, filter 0.1s ease-out;
     }
 
     .logo-container {
@@ -42,19 +44,16 @@
       z-index: 10;
       animation: pulse 3s infinite ease-in-out;
     }
-
     @keyframes pulse {
-      0%, 100% { transform: translateX(-50%) scale(1); }
-      50% { transform: translateX(-50%) scale(1.1); }
+      0%,100% { transform: translateX(-50%) scale(1); }
+      50%     { transform: translateX(-50%) scale(1.1); }
     }
-
     .logo {
       width: 280px;
       user-select: none;
       cursor: pointer;
       transition: filter 0.3s ease;
     }
-
     .logo.clicked {
       filter: drop-shadow(0 0 35px #ffffffaa);
     }
@@ -68,19 +67,16 @@
       position: relative;
       z-index: 5;
     }
-
     .block {
       width: 400px;
       text-align: center;
     }
-
     .block h1 {
       font-size: 32px;
       margin-bottom: 10px;
       border-bottom: 2px solid white;
       padding-bottom: 5px;
     }
-
     .block .lines {
       font-size: 18px;
       margin: 20px 0;
@@ -88,7 +84,6 @@
       flex-direction: column;
       gap: 8px;
     }
-
     .block img {
       width: 300px;
       height: 300px;
@@ -109,10 +104,9 @@
       pointer-events: none;
       z-index: 1;
     }
-
     @keyframes twinkle {
-      0%, 100% { opacity: 0.8; }
-      50%      { opacity: 0.2; }
+      0%,100% { opacity: 0.8; }
+      50%     { opacity: 0.2; }
     }
 
     .light-bar {
@@ -123,14 +117,13 @@
       height: 80px;
       background: linear-gradient(90deg,
         rgba(255,255,255,0) 0%,
-        rgba(255,255,255,.4) 50%,
+        rgba(255,255,255,0.4) 50%,
         rgba(255,255,255,0) 100%);
       filter: blur(10px);
       animation: slideLight 5s linear infinite;
       pointer-events: none;
       z-index: 2;
     }
-
     @keyframes slideLight {
       0%   { background-position: 0 0; }
       100% { background-position: 200% 0; }
@@ -138,7 +131,7 @@
   </style>
 </head>
 <body>
-  <div class="background"></div>
+  <div class="background" id="bg"></div>
   <div class="light-bar"></div>
 
   <div class="logo-container">
@@ -155,7 +148,6 @@
       </div>
       <img src="Arvand.jpg" id="imgArvand" alt="Arvand Image" />
     </div>
-
     <div class="block">
       <h1>Mamad</h1>
       <div class="lines">
@@ -167,7 +159,17 @@
   </div>
 
   <script>
+    const bg = document.getElementById('bg');
     const mainLogo = document.getElementById('mainLogo');
+
+    // با اسکرول زوم و بلور بک‌گراند را بیشتر می‌کنیم
+    window.addEventListener('scroll', () => {
+      const sc = window.scrollY;
+      const scale = 1.1 + sc * 0.0005;      // ضریب زوم
+      const blur  = 2 + sc * 0.01;          // ضریب بلور
+      bg.style.transform = `scale(${scale})`;
+      bg.style.filter = `brightness(0.8) blur(${blur}px)`;
+    });
 
     // افکت کلیک روی لوگو
     mainLogo.addEventListener('click', () => {
@@ -194,10 +196,9 @@
       const img = document.getElementById(id);
       img.addEventListener('mousemove', e => {
         const r = img.getBoundingClientRect();
-        const x = e.clientX - r.left;
-        const y = e.clientY - r.top;
-        const rx = ((x - r.width / 2) / r.width) * 30;
-        const ry = ((y - r.height / 2) / r.height) * -30;
+        const x = e.clientX - r.left, y = e.clientY - r.top;
+        const rx = ((x - r.width/2) / r.width) * 30;
+        const ry = ((y - r.height/2) / r.height) * -30;
         img.style.transform = `perspective(800px) rotateY(${rx}deg) rotateX(${ry}deg)`;
       });
       img.addEventListener('mouseleave', () => {
