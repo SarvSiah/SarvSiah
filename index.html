@@ -8,21 +8,20 @@
       margin: 0; padding: 0;
       background: #000; color: #fff;
       font-family: sans-serif;
-      overflow-y: scroll;
+      overflow: hidden;
       height: 100%;
-      scroll-behavior: smooth;
     }
 
     .background {
-      position: fixed; top: 0; left: 0;
-      width: 100%; height: 100%;
+      position: fixed; top: -10%; left: -10%;
+      width: 120%; height: 120%;
       background: url('mountains.jpg') center/cover no-repeat;
       filter: brightness(0.8) blur(2px);
       will-change: transform, filter;
       z-index: 0;
       pointer-events: none;
-      transform-origin: center center;
-      transition: filter 0.2s ease, transform 0.2s ease;
+      transform: scale(1.1);
+      transition: transform 0.1s ease-out;
     }
 
     .logo-container {
@@ -31,7 +30,6 @@
       z-index: 10;
       pointer-events: auto;
       animation: pulse 3s infinite ease-in-out;
-      transition: opacity 0.3s ease;
     }
 
     @keyframes pulse {
@@ -51,13 +49,14 @@
     }
 
     .content {
-      position: relative;
-      margin-top: 600px; /* فضای مناسب برای اسکرول */
+      position: absolute;
+      top: 550px;
       display: flex;
       justify-content: center;
       gap: 120px;
       width: 100%;
       z-index: 5;
+      transition: transform 0.1s ease-out;
     }
 
     .block {
@@ -92,12 +91,43 @@
       cursor: grab;
     }
 
-    /* بقیه استایل‌ها ... */
+    .star {
+      position: fixed;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: twinkle infinite ease-in-out;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.8; }
+      50%      { opacity: 0.2; }
+    }
+
+    .light-bar {
+      position: fixed; bottom: 0; left: 0;
+      width: 100%; height: 80px;
+      background: linear-gradient(90deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,.4) 50%,
+        rgba(255,255,255,0) 100%);
+      filter: blur(10px);
+      animation: slideLight 5s linear infinite;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    @keyframes slideLight {
+      0%   { background-position: 0 0; }
+      100% { background-position: 200% 0; }
+    }
   </style>
 </head>
 <body>
-
   <div class="background" id="bg"></div>
+  <div class="light-bar"></div>
 
   <div class="logo-container" id="logoContainer">
     <img src="SarvSiah.jpg" alt="SarvSiah Logo" class="logo" id="mainLogo" />
@@ -127,33 +157,81 @@
   <script>
     const bg = document.getElementById('bg');
     const logoContainer = document.getElementById('logoContainer');
+    const content = document.getElementById('content');
+    const mainLogo = document.getElementById('mainLogo');
 
-    // وقتی صفحه اسکرول میشه
-    window.addEventListener('scroll', () => {
-      const scrollY = window.scrollY;
+    // Mouse Move Parallax
+    document.addEventListener('mousemove', e => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 20;
+      const y = (e.clientY / window.innerHeight - 0.5) * 20;
 
-      // زوم بین 1 تا 1.3 proportional به اسکرول
-      const scale = 1 + Math.min(scrollY / 800, 0.3);
-
-      // بلور بین 2 تا 8
-      const blur = 2 + Math.min(scrollY / 100, 6);
-
-      bg.style.transform = `scale(${scale})`;
-      bg.style.filter = `brightness(0.8) blur(${blur}px)`;
-
-      // لوگو با اسکرول کم‌رنگ میشه
-      const opacity = Math.max(0, 1 - scrollY / 300);
-      logoContainer.style.opacity = opacity;
+      bg.style.transform = `scale(1.1) translate(${x * -0.5}px, ${y * -0.5}px)`;
+      logoContainer.style.transform = `translateX(-50%) translate(${x}px, ${y}px)`;
+      content.style.transform = `translate(${x * 0.5}px, ${y * 0.5}px)`;
     });
 
-    // افکت کلیک روی لوگو
-    const mainLogo = document.getElementById('mainLogo');
+    // Smooth Scroll Setup
+    let targetScroll = 0;
+    let currentScroll = 0;
+    let ticking = false;
+
+    const maxScroll = 300; // سقف اسکرول محدود به 300 پیکسل (مقدار دلخواه)
+
+    function smoothScroll() {
+      const dist = targetScroll - currentScroll;
+      currentScroll += dist * 0.1;
+      if (Math.abs(dist) < 0.5) currentScroll = targetScroll;
+
+      window.scrollTo(0, currentScroll);
+
+      // اپاسیتی لوگو
+      const opacity = Math.max(0, 1 - currentScroll / 300);
+      logoContainer.style.opacity = opacity;
+
+      // بلور و زوم بکگراند
+      const blur = Math.min(8, currentScroll / 100);
+      bg.style.filter = `brightness(0.8) blur(${blur}px)`;
+      bg.style.transform = `scale(1.1) translate(0, ${currentScroll / -20}px)`;
+
+      // محتوا
+      content.style.transform = `translate(0, ${currentScroll * 0.5}px)`;
+
+      if (currentScroll !== targetScroll) {
+        requestAnimationFrame(smoothScroll);
+      } else {
+        ticking = false;
+      }
+    }
+
+    window.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      targetScroll += e.deltaY * 0.3;
+      targetScroll = Math.max(0, Math.min(targetScroll, maxScroll));
+
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(smoothScroll);
+      }
+    }, { passive: false });
+
     mainLogo.addEventListener('click', () => {
       mainLogo.classList.add('clicked');
       setTimeout(() => mainLogo.classList.remove('clicked'), 400);
     });
 
-    // افکت حرکت موس روی عکس‌ها
+    function makeStar() {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = Math.random() * 3 + 1;
+      s.style.width = s.style.height = size + 'px';
+      s.style.top = Math.random() * window.innerHeight + 'px';
+      s.style.left = Math.random() * window.innerWidth + 'px';
+      s.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 8000);
+    }
+    setInterval(makeStar, 300);
+
     ['imgArvand', 'imgMmd'].forEach(id => {
       const img = document.getElementById(id);
       img.addEventListener('mousemove', e => {
