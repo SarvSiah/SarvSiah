@@ -9,19 +9,19 @@
       background: #000; color: #fff;
       font-family: sans-serif;
       overflow: hidden;
-      height: 100vh;
+      min-height: 200vh;
     }
 
     .background {
-      position: fixed; top: 0; left: 0;
+      position: fixed; top: -10%; left: -10%;
       width: 120%; height: 120%;
       background: url('mountains.jpg') center/cover no-repeat;
       filter: brightness(0.8) blur(2px);
-      transform: scale(1.1);
       will-change: transform, filter;
       z-index: 0;
       pointer-events: none;
-      transition: transform 0.2s ease;
+      transform: scale(1.1);
+      transition: transform 0.1s ease-out;
     }
 
     .logo-container {
@@ -29,24 +29,24 @@
       transform: translateX(-50%);
       z-index: 10;
       pointer-events: auto;
-      animation: pulse 4s infinite ease-in-out;
-    }
-
-    .logo {
-      width: 280px;
-      transition: transform 0.3s ease, filter 0.3s ease;
-      user-select: none;
-      cursor: pointer;
-    }
-
-    .logo.clicked {
-      transform: scale(1.2);
-      filter: drop-shadow(0 0 35px #ffffffaa);
+      animation: pulse 3s infinite ease-in-out;
+      transition: transform 0.2s ease;
     }
 
     @keyframes pulse {
       0%, 100% { transform: translateX(-50%) scale(1); }
       50% { transform: translateX(-50%) scale(1.1); }
+    }
+
+    .logo {
+      width: 280px;
+      user-select: none;
+      cursor: pointer;
+      transition: filter 0.3s ease;
+    }
+
+    .logo.clicked {
+      filter: drop-shadow(0 0 35px #ffffffaa);
     }
 
     .content {
@@ -57,7 +57,7 @@
       gap: 120px;
       width: 100%;
       z-index: 5;
-      transition: transform 0.1s ease;
+      transition: transform 0.1s ease-out;
     }
 
     .block {
@@ -157,27 +157,25 @@
 
   <script>
     const bg = document.getElementById('bg');
-    const content = document.getElementById('content');
     const logoContainer = document.getElementById('logoContainer');
+    const content = document.getElementById('content');
     const mainLogo = document.getElementById('mainLogo');
 
-    // افکت پارالاکس با حرکت موس
-    document.addEventListener('mousemove', (e) => {
+    // Mouse Move Parallax Effect
+    document.addEventListener('mousemove', e => {
       const x = (e.clientX / window.innerWidth - 0.5) * 20;
       const y = (e.clientY / window.innerHeight - 0.5) * 20;
 
       bg.style.transform = `scale(1.1) translate(${x * -0.5}px, ${y * -0.5}px)`;
-      content.style.transform = `translate(${x}px, ${y}px)`;
-      logoContainer.style.transform = `translate(-50%, ${y * 0.5}px)`;
+      logoContainer.style.transform = `translateX(-50%) translate(${x}px, ${y}px)`;
+      content.style.transform = `translate(${x * 0.5}px, ${y * 0.5}px)`;
     });
 
-    // کلیک روی لوگو
     mainLogo.addEventListener('click', () => {
       mainLogo.classList.add('clicked');
       setTimeout(() => mainLogo.classList.remove('clicked'), 400);
     });
 
-    // ستاره‌ها
     function makeStar() {
       const s = document.createElement('div');
       s.className = 'star';
@@ -191,7 +189,6 @@
     }
     setInterval(makeStar, 300);
 
-    // افکت 3D روی تصاویر
     ['imgArvand', 'imgMmd'].forEach(id => {
       const img = document.getElementById(id);
       img.addEventListener('mousemove', e => {
