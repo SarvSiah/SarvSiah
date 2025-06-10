@@ -9,7 +9,8 @@
     html, body {
       height:100%;
       overflow-x:hidden;
-      scroll-behavior: smooth;
+      overflow-y:auto;
+      scroll-behavior: smooth;    /* اسکرول نرم */
       font-family: sans-serif;
       background: #000;
       color: #fff;
@@ -44,7 +45,8 @@
       width:280px;
       cursor:pointer;
       user-select:none;
-      transition: filter .3s;
+      transition: filter 0.3s, opacity 0.3s;  /* اضافه‌شدن ترنزیشن برای اوپاسیتی */
+      opacity: 1;
     }
     .logo.clicked { filter: drop-shadow(0 0 35px #fff8); }
 
@@ -79,7 +81,7 @@
       border-radius:20px;
       object-fit:cover;
       box-shadow:0 0 15px rgba(255,255,255,0.6);
-      transition:transform .3s;
+      transition:transform 0.3s;
       transform-style:preserve-3d;
       cursor:grab;
     }
@@ -117,16 +119,26 @@
   </div>
 
   <script>
-    const bg      = document.getElementById('bg');
-    const logo    = document.getElementById('mainLogo');
+    const bg   = document.getElementById('bg');
+    const logo = document.getElementById('mainLogo');
 
-    // فقط: زوم و بلور بک‌گراند با اسکرول
+    // زوم و بلور بک‌گراند با اسکرول
     window.addEventListener('scroll', () => {
       const sc    = window.scrollY;
       const scale = 1.2 + sc * 0.0005;   // ضریب زوم
       const blur  = 2   + sc * 0.01;     // ضریب بلور
       bg.style.transform = `scale(${scale})`;
       bg.style.filter    = `brightness(0.8) blur(${blur}px)`;
+
+      // فید کردن لوگو با اسکرول
+      const fadeStart = 50;   // از این مقدار اسکرول شروع به فید می‌کند
+      const fadeUntil = 300;  // تا این مقدار کاملاً محو می‌شود
+      let opacity = 1;
+      if (sc > fadeStart) {
+        opacity = 1 - (sc - fadeStart) / (fadeUntil - fadeStart);
+        if (opacity < 0) opacity = 0;
+      }
+      logo.style.opacity = opacity;
     });
 
     // افکت کلیک روی لوگو
