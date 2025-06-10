@@ -21,17 +21,18 @@
 
     .background {
       position: fixed;
-      top: -10%;
-      left: -10%;
-      width: 120%;
-      height: 120%;
-      background: url('mountains.jpg') center/cover no-repeat;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('mountains.jpg') center top / cover no-repeat;
+      background-attachment: fixed;
       filter: brightness(0.8) blur(2px);
       will-change: transform, filter;
       z-index: 0;
       pointer-events: none;
-      transform: scale(1.1);
-      transition: transform 0.1s ease-out;
+      transform: scale(1.1) translateY(0);
+      transition: filter 0.1s ease-out;
     }
 
     .logo-container {
@@ -171,22 +172,36 @@
     const logoContainer = document.getElementById('logoContainer');
     const mainLogo = document.getElementById('mainLogo');
 
-    // Mouse parallax
+    let scrollOffsetY = 0;
+    let mouseOffsetY = 0;
+
+    function updateBackground() {
+      bg.style.transform = `scale(1.1) translateY(${scrollOffsetY - mouseOffsetY}px)`;
+    }
+
+    // عمودی پارالاکس با اسکرول
+    window.addEventListener('scroll', () => {
+      scrollOffsetY = window.scrollY * 0.2;
+      updateBackground();
+    });
+
+    // موس فقط عمودی افکت
     document.addEventListener('mousemove', e => {
+      mouseOffsetY = (e.clientY / window.innerHeight - 0.5) * 20 * 0.5;
+      updateBackground();
+      // لوگو افکت جدا
       const x = (e.clientX / window.innerWidth - 0.5) * 20;
       const y = (e.clientY / window.innerHeight - 0.5) * 20;
-
-      bg.style.transform = `scale(1.1) translate(${x * -0.5}px, ${y * -0.5}px)`;
       logoContainer.style.transform = `translateX(-50%) translate(${x}px, ${y}px)`;
     });
 
-    // Logo click pulse
+    // کلیک روی لوگو
     mainLogo.addEventListener('click', () => {
       mainLogo.classList.add('clicked');
       setTimeout(() => mainLogo.classList.remove('clicked'), 400);
     });
 
-    // Star effect
+    // ستاره‌های twinkle
     function makeStar() {
       const s = document.createElement('div');
       s.className = 'star';
@@ -200,7 +215,7 @@
     }
     setInterval(makeStar, 300);
 
-    // 3D Image Tilt
+    // Tilt سه‌بعدی تصاویر
     ['imgArvand', 'imgMmd'].forEach(id => {
       const img = document.getElementById(id);
       img.addEventListener('mousemove', e => {
