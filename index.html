@@ -159,15 +159,16 @@
     const content = document.getElementById('content');
     const mainLogo = document.getElementById('mainLogo');
 
-    // Smooth scroll variables
+    // محاسبه ارتفاع کل محتوا برای محدودیت اسکرول
+    const maxScroll = content.getBoundingClientRect().top + 1000; // حدود 1000 پیکسل بیشتر از محتوا
+
     let targetScroll = 0;
     let currentScroll = 0;
-    const maxScroll = 400; // می‌توانید مقدار دلخواه بگذارید
+    let ticking = false;
 
-    // Handle mouse wheel event for smooth scroll
     window.addEventListener('wheel', e => {
       e.preventDefault();
-      targetScroll += e.deltaY * 0.5;
+      targetScroll += e.deltaY * 0.7; // حساسیت اسکرول بیشتر
       if (targetScroll < 0) targetScroll = 0;
       if (targetScroll > maxScroll) targetScroll = maxScroll;
 
@@ -177,26 +178,23 @@
       }
     }, { passive: false });
 
-    let ticking = false;
     function updateScroll() {
       const diff = targetScroll - currentScroll;
-      currentScroll += diff * 0.1;
+      currentScroll += diff * 0.12; // سرعت نرمال تر
+
       if (Math.abs(diff) < 0.1) currentScroll = targetScroll;
 
-      // Scroll the window (even if overflow:hidden, just for semantics)
-      window.scrollTo(0, currentScroll);
-
-      // Opacity logo fades out
+      // تغییر opacity لوگو بر اساس اسکرول
       logoContainer.style.opacity = Math.max(0, 1 - currentScroll / maxScroll);
 
-      // Background blur and zoom
-      const blurVal = (currentScroll / maxScroll) * 6;
-      const scaleVal = 1 + (currentScroll / maxScroll) * 0.1;
+      // بلور و زوم بکگراند
+      const blurVal = (currentScroll / maxScroll) * 10; // بلور بیشتر
+      const scaleVal = 1 + (currentScroll / maxScroll) * 0.15; // زوم بیشتر
       bg.style.filter = `brightness(0.8) blur(${blurVal}px)`;
-      bg.style.transform = `scale(${scaleVal}) translateY(${-currentScroll / 15}px)`;
+      bg.style.transform = `scale(${scaleVal}) translateY(${-currentScroll / 20}px)`;
 
-      // Move content down slightly
-      content.style.transform = `translateX(-50%) translateY(${currentScroll * 0.6}px)`;
+      // حرکت محتوا به سمت پایین
+      content.style.transform = `translateX(-50%) translateY(${currentScroll * 0.7}px)`;
 
       if (currentScroll !== targetScroll) {
         requestAnimationFrame(updateScroll);
@@ -205,13 +203,12 @@
       }
     }
 
-    // Logo click effect
     mainLogo.addEventListener('click', () => {
       mainLogo.classList.add('clicked');
       setTimeout(() => mainLogo.classList.remove('clicked'), 400);
     });
 
-    // Star animation
+    // ستاره‌ها
     function makeStar() {
       const star = document.createElement('div');
       star.className = 'star';
@@ -225,7 +222,7 @@
     }
     setInterval(makeStar, 300);
 
-    // Image tilt effect on mouse move
+    // tilt تصاویر روی موس
     ['imgArvand', 'imgMmd'].forEach(id => {
       const img = document.getElementById(id);
       img.addEventListener('mousemove', e => {
