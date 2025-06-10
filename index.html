@@ -8,7 +8,8 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      overflow-y: scroll;
+      overflow-x: hidden;    /* جلوگیری از اسکرول افقی */
+      overflow-y: auto;
       scroll-behavior: smooth;
       background: #000;
       color: #fff;
@@ -140,7 +141,7 @@
   <div class="background"></div>
   <div class="light-bar"></div>
 
-  <div class="logo-container" id="logoContainer">
+  <div class="logo-container">
     <img src="SarvSiah.jpg" alt="SarvSiah Logo" class="logo" id="mainLogo" />
   </div>
 
@@ -168,7 +169,7 @@
   <script>
     const mainLogo = document.getElementById('mainLogo');
 
-    // کلیک روی لوگو
+    // افکت کلیک روی لوگو
     mainLogo.addEventListener('click', () => {
       mainLogo.classList.add('clicked');
       setTimeout(() => mainLogo.classList.remove('clicked'), 400);
