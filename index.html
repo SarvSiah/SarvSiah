@@ -10,8 +10,8 @@
       background: #000;
       color: #fff;
       font-family: sans-serif;
-      height: 100%;
       scroll-behavior: smooth;
+      height: 100%;
       overflow-y: scroll;
     }
 
@@ -27,11 +27,10 @@
       height: 120%;
       background: url('mountains.jpg') center/cover no-repeat;
       filter: brightness(0.8) blur(2px);
-      will-change: transform, filter;
+      transform: scale(1.1);
+      transition: all 1s ease;
       z-index: 0;
       pointer-events: none;
-      transform: scale(1.1);
-      transition: all 0.6s ease;
     }
 
     .background.zoomed {
@@ -45,8 +44,8 @@
       left: 50%;
       transform: translateX(-50%);
       z-index: 10;
-      animation: pulse 3s infinite ease-in-out;
       transition: opacity 1s ease;
+      animation: pulse 3s infinite ease-in-out;
     }
 
     .logo-container.faded {
@@ -61,22 +60,16 @@
     .logo {
       width: 280px;
       user-select: none;
-      cursor: pointer;
-      transition: filter 0.3s ease;
-    }
-
-    .logo.clicked {
-      filter: drop-shadow(0 0 35px #ffffffaa);
     }
 
     .content {
       margin-top: 600px;
       display: flex;
       justify-content: center;
-      gap: 120px;
+      gap: 100px;
       padding-bottom: 1000px;
-      z-index: 5;
       position: relative;
+      z-index: 2;
     }
 
     .block {
@@ -110,21 +103,6 @@
       transform-style: preserve-3d;
     }
 
-    .star {
-      position: fixed;
-      background: white;
-      border-radius: 50%;
-      opacity: 0.8;
-      animation: twinkle infinite ease-in-out;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.8; }
-      50%      { opacity: 0.2; }
-    }
-
     .light-bar {
       position: fixed;
       bottom: 0;
@@ -138,7 +116,7 @@
       filter: blur(10px);
       animation: slideLight 5s linear infinite;
       pointer-events: none;
-      z-index: 2;
+      z-index: 1;
     }
 
     @keyframes slideLight {
@@ -152,7 +130,7 @@
   <div class="light-bar"></div>
 
   <div class="logo-container" id="logoContainer">
-    <img src="SarvSiah.jpg" alt="SarvSiah Logo" class="logo" id="mainLogo" />
+    <img src="SarvSiah.jpg" alt="SarvSiah Logo" class="logo" />
   </div>
 
   <div class="content" id="content">
@@ -163,7 +141,7 @@
         <div>The Best</div>
         <div>The Strongest</div>
       </div>
-      <img src="Arvand.jpg" id="imgArvand" alt="Arvand Image" />
+      <img src="Arvand.jpg" alt="Arvand Image" />
     </div>
 
     <div class="block">
@@ -172,71 +150,26 @@
         <div>This guy is just a good boy</div>
         <div>Loved Allah</div>
       </div>
-      <img src="mmd.jpg" id="imgMmd" alt="Mamad Image" />
+      <img src="mmd.jpg" alt="Mamad Image" />
     </div>
   </div>
 
   <script>
     const bg = document.getElementById('bg');
-    const logoContainer = document.getElementById('logoContainer');
-    const mainLogo = document.getElementById('mainLogo');
+    const logo = document.getElementById('logoContainer');
+    const content = document.getElementById('content');
 
-    // Mouse parallax
-    document.addEventListener('mousemove', e => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 20;
-      const y = (e.clientY / window.innerHeight - 0.5) * 20;
-      bg.style.transform = `scale(1.1) translate(${x * -0.5}px, ${y * -0.5}px)`;
-      logoContainer.style.transform = `translateX(-50%) translate(${x}px, ${y}px)`;
-    });
-
-    // Logo click pulse
-    mainLogo.addEventListener('click', () => {
-      mainLogo.classList.add('clicked');
-      setTimeout(() => mainLogo.classList.remove('clicked'), 400);
-    });
-
-    // Star effect
-    function makeStar() {
-      const s = document.createElement('div');
-      s.className = 'star';
-      const size = Math.random() * 3 + 1;
-      s.style.width = s.style.height = size + 'px';
-      s.style.top = Math.random() * window.innerHeight + 'px';
-      s.style.left = Math.random() * window.innerWidth + 'px';
-      s.style.animationDuration = (Math.random() * 3 + 2) + 's';
-      document.body.appendChild(s);
-      setTimeout(() => s.remove(), 8000);
-    }
-    setInterval(makeStar, 300);
-
-    // 3D Image Tilt
-    ['imgArvand', 'imgMmd'].forEach(id => {
-      const img = document.getElementById(id);
-      img.addEventListener('mousemove', e => {
-        const r = img.getBoundingClientRect();
-        const x = e.clientX - r.left;
-        const y = e.clientY - r.top;
-        const rx = ((x - r.width / 2) / r.width) * 30;
-        const ry = ((y - r.height / 2) / r.height) * -30;
-        img.style.transform = `perspective(800px) rotateY(${rx}deg) rotateX(${ry}deg)`;
-      });
-      img.addEventListener('mouseleave', () => {
-        img.style.transform = 'rotateY(0deg) rotateX(0deg)';
-      });
-    });
-
-    // Scroll detection
     let scrollCount = 0;
-    let scrolled = false;
+    let triggered = false;
 
-    window.addEventListener('wheel', () => {
-      if (scrolled) return;
-      scrollCount++;
+    window.addEventListener('wheel', (e) => {
+      if (triggered) return;
+      if (e.deltaY > 0) scrollCount++;
       if (scrollCount >= 2) {
-        scrolled = true;
-        document.getElementById('content').scrollIntoView({ behavior: 'smooth' });
+        triggered = true;
+        content.scrollIntoView({ behavior: 'smooth' });
         bg.classList.add('zoomed');
-        logoContainer.classList.add('faded');
+        logo.classList.add('faded');
       }
     });
   </script>
