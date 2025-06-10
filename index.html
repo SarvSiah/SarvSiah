@@ -1,46 +1,214 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8">
-  <title>Test Fixed BG & Fade Logo</title>
+  <meta charset="UTF-8" />
+  <title>SarvSiah</title>
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
     html, body {
-      height:100%;
-      overflow-x:hidden;
-      scroll-behavior: smooth;
+      margin: 0; padding: 0;
+      background: #000; color: #fff;
       font-family: sans-serif;
+      overflow-y: hidden;
+      min-height: 200vh;
     }
-    body {
-      background: url('mountains.jpg') center top / cover no-repeat fixed;
+    .background {
+      position: fixed; top: -10%; left: -10%;
+      width: 120%; height: 120%;
+      background: url('images/mountains.jpg') center/cover no-repeat;
+      filter: brightness(0.8) blur(2px);
+      will-change: transform, filter;
+      z-index: 0;
+      pointer-events: none;
+      transition: filter 0.2s ease, transform 0.2s ease;
     }
-    #logo {
-      position: fixed;
-      top: 20px; left:50%;
+    .logo-container {
+      position: fixed; top: 40px; left: 50%;
       transform: translateX(-50%);
-      width:200px;
-      transition: opacity .3s ease;
+      z-index: 10;
+      transition: opacity 0.5s ease;
+      pointer-events: auto;
+    }
+    .logo {
+      width: 280px;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      user-select: none;
+      cursor: pointer;
+    }
+    .logo.clicked {
+      transform: scale(1.2);
+      filter: drop-shadow(0 0 35px #ffffffaa);
     }
     .content {
-      margin-top:250px;
-      height:2000px; /* برای تست اسکرول */
+      position: absolute;
+      top: 550px;
+      display: flex;
+      justify-content: center;
+      gap: 120px;
+      width: 100%;
+      z-index: 5;
+    }
+    .block {
+      width: 400px;
+      text-align: center;
+    }
+    .block h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+      border-bottom: 2px solid white;
+      padding-bottom: 5px;
+    }
+    .block .lines {
+      font-size: 18px;
+      margin: 20px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .block img {
+      width: 300px;
+      height: 300px;
+      border-radius: 20px;
+      object-fit: cover;
+      box-shadow: 0 0 15px rgba(255,255,255,0.6);
+      transform: scaleX(-1);
+      perspective: 800px;
+      transition: transform 0.3s ease;
+      cursor: grab;
+    }
+    .star {
+      position: fixed;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: twinkle infinite ease-in-out;
+      pointer-events: none;
+      z-index: 1;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.8; }
+      50%      { opacity: 0.2; }
+    }
+    .light-bar {
+      position: fixed; bottom: 0; left: 0;
+      width: 100%; height: 80px;
+      background: linear-gradient(90deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,.4) 50%,
+        rgba(255,255,255,0) 100%);
+      filter: blur(10px);
+      animation: slideLight 5s linear infinite;
+      pointer-events: none;
+      z-index: 2;
+    }
+    @keyframes slideLight {
+      0%   { background-position: 0 0; }
+      100% { background-position: 200% 0; }
     }
   </style>
 </head>
 <body>
-  <img id="logo" src="SarvSiah.jpg" alt="Logo">
-  <div class="content">
-    <h1>اسکرول کن</h1>
-    <p>...</p>
+  <div class="background" id="bg"></div>
+  <div class="light-bar"></div>
+
+  <div class="logo-container" id="logoContainer">
+    <img src="images/SarvSiah.jpg" alt="SarvSiah Logo" class="logo" id="mainLogo" />
   </div>
+
+  <div class="content">
+    <div class="block">
+      <h1>Arvand</h1>
+      <div class="lines">
+        <div>This bro is awsom</div>
+        <div>The Best</div>
+        <div>The Strongest</div>
+      </div>
+      <img src="images/Arvand.jpg" id="imgArvand" alt="Arvand Image" />
+    </div>
+
+    <div class="block">
+      <h1>Mamad</h1>
+      <div class="lines">
+        <div>This guy is just a good boy</div>
+        <div>Loved Allah</div>
+      </div>
+      <img src="images/mmd.jpg" id="imgMmd" alt="Mamad Image" />
+    </div>
+  </div>
+
   <script>
-    const logo = document.getElementById('logo');
-    window.addEventListener('scroll', () => {
-      const sc = window.scrollY;
-      const start = 50, end = 300;
-      let op = 1;
-      if (sc > start) op = Math.max(0, 1 - (sc - start) / (end - start));
-      logo.style.opacity = op;
+    const bg = document.getElementById('bg');
+    const logoContainer = document.getElementById('logoContainer');
+    const mainLogo = document.getElementById('mainLogo');
+
+    let targetScroll = 0;
+    let currentScroll = 0;
+    let ticking = false;
+    const maxScroll = document.body.scrollHeight - window.innerHeight;
+
+    function smoothScroll() {
+      const dist = targetScroll - currentScroll;
+      currentScroll += dist * 0.1;
+      if (Math.abs(dist) < 0.5) currentScroll = targetScroll;
+
+      window.scrollTo(0, currentScroll);
+      let opacity = 1 - currentScroll / 300;
+      if (opacity < 0) opacity = 0;
+      logoContainer.style.opacity = opacity;
+
+      const blur = Math.min(8, currentScroll / 100);
+      bg.style.filter = `blur(${blur}px) brightness(0.8)`;
+      bg.style.transform = `translate(0, 0) scale(${1 + currentScroll / 1000})`;
+
+      if (currentScroll !== targetScroll) {
+        requestAnimationFrame(smoothScroll);
+      } else {
+        ticking = false;
+      }
+    }
+
+    window.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      targetScroll += e.deltaY * 0.3;
+      if (targetScroll < 0) targetScroll = 0;
+      if (targetScroll > maxScroll) targetScroll = maxScroll;
+
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(smoothScroll);
+      }
+    }, { passive: false });
+
+    mainLogo.addEventListener('click', () => {
+      mainLogo.classList.add('clicked');
+      setTimeout(() => mainLogo.classList.remove('clicked'), 400);
+    });
+
+    function makeStar() {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = Math.random() * 3 + 1;
+      s.style.width = s.style.height = size + 'px';
+      s.style.top = Math.random() * window.innerHeight + 'px';
+      s.style.left = Math.random() * window.innerWidth + 'px';
+      s.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 8000);
+    }
+    setInterval(makeStar, 300);
+
+    ['imgArvand', 'imgMmd'].forEach(id => {
+      const img = document.getElementById(id);
+      img.addEventListener('mousemove', e => {
+        const r = img.getBoundingClientRect();
+        const x = e.clientX - r.left;
+        const y = e.clientY - r.top;
+        const rx = ((x - r.width / 2) / r.width) * 30;
+        const ry = ((y - r.height / 2) / r.height) * -30;
+        img.style.transform = `perspective(800px) rotateY(${rx}deg) rotateX(${ry}deg) scaleX(-1)`;
+      });
+      img.addEventListener('mouseleave', () => {
+        img.style.transform = 'scaleX(-1)';
+      });
     });
   </script>
 </body>
