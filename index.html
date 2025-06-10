@@ -8,7 +8,7 @@
       margin: 0; padding: 0;
       background: #000; color: #fff;
       font-family: sans-serif;
-      overflow-y: hidden; /* غیرفعال کردن اسکرول پیشفرض */
+      overflow-y: hidden;
       min-height: 200vh;
     }
 
@@ -128,7 +128,6 @@
   </div>
 
   <div class="content">
-    <!-- Arvand -->
     <div class="block">
       <h1>Arvand</h1>
       <div class="lines">
@@ -136,17 +135,16 @@
         <div>The Best</div>
         <div>The Strongest</div>
       </div>
-      <img src="./templates/Arvand.jpg" id="imgArvand" alt="Arvand Image" />
+      <img src="Arvand.jpg" id="imgArvand" alt="Arvand Image" />
     </div>
 
-    <!-- Mamad -->
     <div class="block">
       <h1>Mamad</h1>
       <div class="lines">
         <div>This guy is just a good boy</div>
         <div>Loved Allah</div>
       </div>
-      <img src="./templates/mmd.jpg" id="imgMmd" alt="Mamad Image" />
+      <img src="mmd.jpg" id="imgMmd" alt="Mamad Image" />
     </div>
   </div>
 
@@ -155,27 +153,23 @@
     const logoContainer = document.getElementById('logoContainer');
     const mainLogo = document.getElementById('mainLogo');
 
-    let targetScroll = 0;  // جایگاه هدف اسکرول
-    let currentScroll = 0; // جایگاه فعلی اسکرول
+    let targetScroll = 0;
+    let currentScroll = 0;
     let ticking = false;
 
-    // ماکزیمم اسکرول صفحه (حداقل)
     const maxScroll = document.body.scrollHeight - window.innerHeight;
 
-    // تابع انیمیشن برای حرکت نرم اسکرول
     function smoothScroll() {
       const dist = targetScroll - currentScroll;
-      currentScroll += dist * 0.1; // ضریب نرمی کمتر = نرم تر
+      currentScroll += dist * 0.1;
       if (Math.abs(dist) < 0.5) currentScroll = targetScroll;
 
       window.scrollTo(0, currentScroll);
 
-      // تغییر opacity لوگو
       let opacity = 1 - currentScroll / 300;
       if (opacity < 0) opacity = 0;
       logoContainer.style.opacity = opacity;
 
-      // تغییر پس‌زمینه blur و scale
       const blur = Math.min(8, currentScroll / 100);
       bg.style.filter = `blur(${blur}px) brightness(0.8)`;
       bg.style.transform = `translate(0, 0) scale(${1 + currentScroll / 1000})`;
@@ -187,12 +181,10 @@
       }
     }
 
-    // جلوگیری از اسکرول پیش‌فرض و کنترل با جاوااسکریپت
     window.addEventListener('wheel', (e) => {
       e.preventDefault();
 
-      // تغییر هدف اسکرول با دلتای چرخ موس، و محدود کردن در بازه 0 تا maxScroll
-      targetScroll += e.deltaY * 0.3; // ضریب سرعت اسکرول، کمتر=نرم تر
+      targetScroll += e.deltaY * 0.3;
       if (targetScroll < 0) targetScroll = 0;
       if (targetScroll > maxScroll) targetScroll = maxScroll;
 
@@ -202,13 +194,11 @@
       }
     }, { passive: false });
 
-    // کلیک روی لوگو
     mainLogo.addEventListener('click', () => {
       mainLogo.classList.add('clicked');
       setTimeout(() => mainLogo.classList.remove('clicked'), 400);
     });
 
-    // ستاره‌ها
     function makeStar() {
       const s = document.createElement('div');
       s.className = 'star';
@@ -222,7 +212,6 @@
     }
     setInterval(makeStar, 300);
 
-    // افکت 3D روی تصاویر
     ['imgArvand', 'imgMmd'].forEach(id => {
       const img = document.getElementById(id);
       img.addEventListener('mousemove', e => {
