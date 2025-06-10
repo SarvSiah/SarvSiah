@@ -8,8 +8,8 @@
       margin: 0; padding: 0;
       background: #000; color: #fff;
       font-family: sans-serif;
-      height: 100%;
-      overflow-x: hidden;
+      overflow-y: hidden; /* غیرفعال کردن اسکرول پیشفرض */
+      min-height: 200vh;
     }
 
     .background {
@@ -17,37 +17,35 @@
       width: 120%; height: 120%;
       background: url('mountains.jpg') center/cover no-repeat;
       filter: brightness(0.8) blur(2px);
+      will-change: transform, filter;
       z-index: 0;
       pointer-events: none;
-      transform: scale(1.1);
-      transition: transform 0.1s ease-out;
+      transition: filter 0.2s ease, transform 0.2s ease;
     }
 
     .logo-container {
       position: fixed; top: 40px; left: 50%;
       transform: translateX(-50%);
       z-index: 10;
-      animation: pulse 3s infinite ease-in-out;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: translateX(-50%) scale(1); }
-      50% { transform: translateX(-50%) scale(1.1); }
+      transition: opacity 0.5s ease;
+      pointer-events: auto;
     }
 
     .logo {
       width: 280px;
+      transition: transform 0.3s ease, filter 0.3s ease;
       user-select: none;
       cursor: pointer;
-      transition: filter 0.3s ease;
     }
 
     .logo.clicked {
+      transform: scale(1.2);
       filter: drop-shadow(0 0 35px #ffffffaa);
     }
 
     .content {
-      margin-top: 600px;
+      position: absolute;
+      top: 550px;
       display: flex;
       justify-content: center;
       gap: 120px;
@@ -129,7 +127,8 @@
     <img src="SarvSiah.jpg" alt="SarvSiah Logo" class="logo" id="mainLogo" />
   </div>
 
-  <div class="content" id="content">
+  <div class="content">
+    <!-- Arvand -->
     <div class="block">
       <h1>Arvand</h1>
       <div class="lines">
@@ -137,57 +136,49 @@
         <div>The Best</div>
         <div>The Strongest</div>
       </div>
-      <img src="Arvand.jpg" id="imgArvand" alt="Arvand Image" />
+      <img src="./templates/Arvand.jpg" id="imgArvand" alt="Arvand Image" />
     </div>
 
+    <!-- Mamad -->
     <div class="block">
       <h1>Mamad</h1>
       <div class="lines">
         <div>This guy is just a good boy</div>
         <div>Loved Allah</div>
       </div>
-      <img src="mmd.jpg" id="imgMmd" alt="Mamad Image" />
+      <img src="./templates/mmd.jpg" id="imgMmd" alt="Mamad Image" />
     </div>
   </div>
-
-  <div style="height: 1500px;"></div> <!-- برای ایجاد اسکرول -->
 
   <script>
     const bg = document.getElementById('bg');
     const logoContainer = document.getElementById('logoContainer');
-    const content = document.getElementById('content');
     const mainLogo = document.getElementById('mainLogo');
 
-    // Mouse Move Parallax
-    document.addEventListener('mousemove', e => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 20;
-      const y = (e.clientY / window.innerHeight - 0.5) * 20;
-
-      bg.style.transform = `scale(1.1) translate(${x * -0.5}px, ${y * -0.5}px)`;
-      logoContainer.style.transform = `translateX(-50%) translate(${x}px, ${y}px)`;
-      content.style.transform = `translate(${x * 0.5}px, ${y * 0.5}px)`;
-    });
-
-    // Smooth Scroll
-    let targetScroll = 0;
-    let currentScroll = 0;
+    let targetScroll = 0;  // جایگاه هدف اسکرول
+    let currentScroll = 0; // جایگاه فعلی اسکرول
     let ticking = false;
 
+    // ماکزیمم اسکرول صفحه (حداقل)
     const maxScroll = document.body.scrollHeight - window.innerHeight;
 
+    // تابع انیمیشن برای حرکت نرم اسکرول
     function smoothScroll() {
       const dist = targetScroll - currentScroll;
-      currentScroll += dist * 0.1;
+      currentScroll += dist * 0.1; // ضریب نرمی کمتر = نرم تر
       if (Math.abs(dist) < 0.5) currentScroll = targetScroll;
 
       window.scrollTo(0, currentScroll);
 
-      const opacity = Math.max(0, 1 - currentScroll / 300);
+      // تغییر opacity لوگو
+      let opacity = 1 - currentScroll / 300;
+      if (opacity < 0) opacity = 0;
       logoContainer.style.opacity = opacity;
 
+      // تغییر پس‌زمینه blur و scale
       const blur = Math.min(8, currentScroll / 100);
       bg.style.filter = `blur(${blur}px) brightness(0.8)`;
-      bg.style.transform = `scale(1.1) translate(0, ${currentScroll / -20}px)`;
+      bg.style.transform = `translate(0, 0) scale(${1 + currentScroll / 1000})`;
 
       if (currentScroll !== targetScroll) {
         requestAnimationFrame(smoothScroll);
@@ -196,10 +187,14 @@
       }
     }
 
+    // جلوگیری از اسکرول پیش‌فرض و کنترل با جاوااسکریپت
     window.addEventListener('wheel', (e) => {
       e.preventDefault();
-      targetScroll += e.deltaY * 0.5;
-      targetScroll = Math.max(0, Math.min(targetScroll, maxScroll));
+
+      // تغییر هدف اسکرول با دلتای چرخ موس، و محدود کردن در بازه 0 تا maxScroll
+      targetScroll += e.deltaY * 0.3; // ضریب سرعت اسکرول، کمتر=نرم تر
+      if (targetScroll < 0) targetScroll = 0;
+      if (targetScroll > maxScroll) targetScroll = maxScroll;
 
       if (!ticking) {
         ticking = true;
@@ -207,13 +202,13 @@
       }
     }, { passive: false });
 
-    // Logo click effect
+    // کلیک روی لوگو
     mainLogo.addEventListener('click', () => {
       mainLogo.classList.add('clicked');
       setTimeout(() => mainLogo.classList.remove('clicked'), 400);
     });
 
-    // Stars
+    // ستاره‌ها
     function makeStar() {
       const s = document.createElement('div');
       s.className = 'star';
@@ -227,7 +222,7 @@
     }
     setInterval(makeStar, 300);
 
-    // Image hover 3D tilt
+    // افکت 3D روی تصاویر
     ['imgArvand', 'imgMmd'].forEach(id => {
       const img = document.getElementById(id);
       img.addEventListener('mousemove', e => {
