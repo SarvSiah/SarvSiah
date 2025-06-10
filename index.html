@@ -2,7 +2,7 @@
 <html lang="fa">
 <head>
 <meta charset="UTF-8" />
-<title>Smooth Scroll Background + Mouse Parallax</title>
+<title>SarvSiah</title>
 <style>
   html, body {
     margin: 0; padding: 0; height: 100%; overflow: hidden;
@@ -18,6 +18,7 @@
     z-index: 0;
     pointer-events: none;
     transform-origin: center top;
+    transition: filter 0.3s ease;
   }
   .content {
     position: relative;
@@ -37,6 +38,11 @@
     cursor: pointer;
     width: 280px;
     user-select: none;
+    filter: none;
+    transition: filter 0.3s ease;
+  }
+  .logo.clicked {
+    filter: drop-shadow(0 0 35px #ffffffaa);
   }
   .block {
     margin: 50px auto;
@@ -48,6 +54,7 @@
     box-shadow: 0 0 15px rgba(255,255,255,0.6);
     transform: scaleX(-1);
     cursor: grab;
+    transition: transform 0.3s ease;
   }
 </style>
 </head>
@@ -61,38 +68,33 @@
   <div class="block">
     <h1>Arvand</h1>
     <p>This bro is awsome<br>The Best<br>The Strongest</p>
-    <img src="Arvand.jpg" alt="Arvand Image" />
+    <img src="Arvand.jpg" alt="Arvand Image" id="imgArvand" />
   </div>
   <div class="block">
     <h1>Mamad</h1>
     <p>This guy is just a good boy<br>Loved Allah</p>
-    <img src="mmd.jpg" alt="Mamad Image" />
+    <img src="mmd.jpg" alt="Mamad Image" id="imgMmd" />
   </div>
 </div>
 
 <script>
   const bg = document.getElementById('background');
+  const logo = document.getElementById('logo');
+  const imgArvand = document.getElementById('imgArvand');
+  const imgMmd = document.getElementById('imgMmd');
 
   let scrollPos = 0;
   let targetScroll = 0;
 
-  // Mouse parallax variables
-  let mouseX = 0;
-  let mouseY = 0;
-  let parallaxX = 0;
-  let parallaxY = 0;
+  // محدودیت اسکرول (می‌تونی تغییر بدی)
+  const maxScroll = 2000;
 
+  // اسکرول نرم
   window.addEventListener('wheel', e => {
     e.preventDefault();
     targetScroll += e.deltaY;
-    targetScroll = Math.min(Math.max(targetScroll, 0), 2000);
+    targetScroll = Math.min(Math.max(targetScroll, 0), maxScroll);
   }, { passive: false });
-
-  document.addEventListener('mousemove', e => {
-    // نرمالایز موقعیت موس -0.5 تا +0.5
-    mouseX = (e.clientX / window.innerWidth) - 0.5;
-    mouseY = (e.clientY / window.innerHeight) - 0.5;
-  });
 
   function lerp(a, b, t) {
     return a + (b - a) * t;
@@ -101,25 +103,41 @@
   function animate() {
     scrollPos = lerp(scrollPos, targetScroll, 0.1);
 
-    // نرم کردن حرکت موس
-    parallaxX = lerp(parallaxX, mouseX, 0.05);
-    parallaxY = lerp(parallaxY, mouseY, 0.05);
-
-    // زوم و بلور بکگراند با اسکرول
+    // بلور و زوم بکگراند
+    const blur = Math.min(scrollPos / 200, 8);
     const zoom = 1 + scrollPos / 3000;
-    const blur = scrollPos / 300;
-
-    // حرکت بکگراند با اسکرول + پارالاکس موس با دامنه کم
-    const moveX = parallaxX * 10; // حرکت کم در محور X
-    const moveY = parallaxY * 10; // حرکت کم در محور Y
-
-    bg.style.transform = `scale(${zoom}) translate(${moveX}px, calc(${-scrollPos * 0.3 + moveY}px))`;
     bg.style.filter = `brightness(0.8) blur(${blur}px)`;
+    bg.style.transform = `scale(${zoom}) translateY(${scrollPos / -20}px)`;
+
+    // لوگو ناپدید میشه با اسکرول
+    const logoOpacity = Math.max(0, 1 - scrollPos / 300);
+    logo.style.opacity = logoOpacity;
 
     requestAnimationFrame(animate);
   }
 
   animate();
+
+  // کلیک روی لوگو افکت میده
+  logo.addEventListener('click', () => {
+    logo.classList.add('clicked');
+    setTimeout(() => logo.classList.remove('clicked'), 400);
+  });
+
+  // چرخش تصاویر وقتی موس روشونه
+  [imgArvand, imgMmd].forEach(img => {
+    img.addEventListener('mousemove', e => {
+      const rect = img.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const rx = ((x - rect.width / 2) / rect.width) * 30;
+      const ry = ((y - rect.height / 2) / rect.height) * -30;
+      img.style.transform = `perspective(800px) rotateY(${rx}deg) rotateX(${ry}deg) scaleX(-1)`;
+    });
+    img.addEventListener('mouseleave', () => {
+      img.style.transform = 'scaleX(-1)';
+    });
+  });
 </script>
 
 </body>
