@@ -2,7 +2,7 @@
 <html lang="fa">
 <head>
 <meta charset="UTF-8" />
-<title>Smooth Scroll Background</title>
+<title>Smooth Scroll Background + Mouse Parallax</title>
 <style>
   html, body {
     margin: 0; padding: 0; height: 100%; overflow: hidden;
@@ -22,9 +22,9 @@
   .content {
     position: relative;
     width: 100%;
-    height: 3000px; /* بیشتر از صفحه برای اسکرول */
+    height: 3000px;
     z-index: 5;
-    padding-top: 100vh; /* فاصله برای مشاهده بکگراند */
+    padding-top: 100vh;
     box-sizing: border-box;
     text-align: center;
   }
@@ -72,15 +72,27 @@
 
 <script>
   const bg = document.getElementById('background');
+
   let scrollPos = 0;
   let targetScroll = 0;
+
+  // Mouse parallax variables
+  let mouseX = 0;
+  let mouseY = 0;
+  let parallaxX = 0;
+  let parallaxY = 0;
 
   window.addEventListener('wheel', e => {
     e.preventDefault();
     targetScroll += e.deltaY;
-    if (targetScroll < 0) targetScroll = 0;
-    if (targetScroll > 2000) targetScroll = 2000;
+    targetScroll = Math.min(Math.max(targetScroll, 0), 2000);
   }, { passive: false });
+
+  document.addEventListener('mousemove', e => {
+    // نرمالایز موقعیت موس -0.5 تا +0.5
+    mouseX = (e.clientX / window.innerWidth) - 0.5;
+    mouseY = (e.clientY / window.innerHeight) - 0.5;
+  });
 
   function lerp(a, b, t) {
     return a + (b - a) * t;
@@ -89,11 +101,19 @@
   function animate() {
     scrollPos = lerp(scrollPos, targetScroll, 0.1);
 
-    // بکگراند زوم و بلور به نسبت اسکرول
-    const zoom = 1 + scrollPos / 3000; // حدود 1 تا 1.66
-    const blur = scrollPos / 300;     // حدود 0 تا 6.6 px
+    // نرم کردن حرکت موس
+    parallaxX = lerp(parallaxX, mouseX, 0.05);
+    parallaxY = lerp(parallaxY, mouseY, 0.05);
 
-    bg.style.transform = `scale(${zoom}) translateY(${-scrollPos * 0.3}px)`;
+    // زوم و بلور بکگراند با اسکرول
+    const zoom = 1 + scrollPos / 3000;
+    const blur = scrollPos / 300;
+
+    // حرکت بکگراند با اسکرول + پارالاکس موس با دامنه کم
+    const moveX = parallaxX * 10; // حرکت کم در محور X
+    const moveY = parallaxY * 10; // حرکت کم در محور Y
+
+    bg.style.transform = `scale(${zoom}) translate(${moveX}px, calc(${-scrollPos * 0.3 + moveY}px))`;
     bg.style.filter = `brightness(0.8) blur(${blur}px)`;
 
     requestAnimationFrame(animate);
