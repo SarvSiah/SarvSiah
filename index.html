@@ -1,46 +1,212 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8">
-  <title>صفحه با بک‌گراند ثابت</title>
+  <meta charset="UTF-8" />
+  <title>SarvSiah</title>
   <style>
-    /* ۱. صفر کردن مارجین و پدینگ و جلوگیری از اسکرول افقی */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* ----- پایه ----- */
+    * { margin:0; padding:0; box-sizing:border-box; }
     html, body {
-      height: 100%;
-      overflow-x: hidden;
-      overflow-y: auto;
-    }
-
-    /* ۲. بک‌گراند ثابت روی تمام صفحه */
-    body {
-      background: url('mountains.jpg') center top / cover no-repeat fixed;
+      height:100%;
+      overflow-x:hidden;
+      overflow-y:auto;
+      scroll-behavior: smooth; /* اسکرول نرم */
       font-family: sans-serif;
-      color: #fff;
+      color:#fff;
+      background: #000;
     }
 
-    /* ۳. محتوای نمونه برای تست اسکرول */
-    .content {
-      padding: 50px;
+    /* ----- بک‌گراند ----- */
+    .background {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: url('mountains.jpg') center top / cover no-repeat fixed;
+      /* پیش‌فرض کمی زوم */
+      transform: scale(1.2) translateX(0);
+      filter: brightness(0.8) blur(2px);
+      transition: transform 0.1s ease-out, filter 0.1s ease-out;
+      z-index: 0;
+      pointer-events: none;
     }
-    .content p {
-      margin-bottom: 1.5em;
-      line-height: 1.6;
+
+    /* ----- لوگو ----- */
+    .logo-container {
+      position: fixed;
+      top: 40px; left: 50%;
+      transform: translateX(-50%);
+      z-index:10;
+      animation: pulse 3s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0%,100% { transform: translateX(-50%) scale(1); }
+      50%     { transform: translateX(-50%) scale(1.1); }
+    }
+    .logo {
+      width:280px;
+      user-select:none;
+      cursor:pointer;
+      transition: filter .3s ease;
+    }
+    .logo.clicked {
+      filter: drop-shadow(0 0 35px #ffffffaa);
+    }
+
+    /* ----- محتوا ----- */
+    .content {
+      margin-top:600px;
+      padding-bottom:1000px;
+      display:flex;
+      justify-content:center;
+      gap:120px;
+      position:relative;
+      z-index:5;
+    }
+    .block {
+      width:400px;
+      text-align:center;
+    }
+    .block h1 {
+      font-size:32px;
+      margin-bottom:10px;
+      border-bottom:2px solid #fff;
+      padding-bottom:5px;
+    }
+    .lines {
+      font-size:18px;
+      margin:20px 0;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .block img {
+      width:300px; height:300px;
+      border-radius:20px;
+      object-fit:cover;
+      box-shadow:0 0 15px rgba(255,255,255,0.6);
+      transition:transform .3s ease;
+      cursor:grab;
+      transform-style: preserve-3d;
+    }
+
+    /* ----- افکت ستاره و نور ----- */
+    .star {
+      position: fixed;
+      background:#fff;
+      border-radius:50%;
+      opacity:.8;
+      animation:twinkle infinite ease-in-out;
+      pointer-events:none;
+      z-index:1;
+    }
+    @keyframes twinkle {
+      0%,100% { opacity:.8; }
+      50%     { opacity:.2; }
+    }
+    .light-bar {
+      position:fixed;
+      bottom:0; left:0;
+      width:100%; height:80px;
+      background: linear-gradient(90deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,.4) 50%,
+        rgba(255,255,255,0) 100%);
+      filter:blur(10px);
+      animation:slideLight 5s linear infinite;
+      pointer-events:none;
+      z-index:2;
+    }
+    @keyframes slideLight {
+      0%   { background-position:0 0; }
+      100% { background-position:200% 0; }
     }
   </style>
 </head>
 <body>
-  <div class="content">
-    <h1>سلام!</h1>
-    <!-- تکرار پاراگراف برای ایجاد اسکرول -->
-    <p>این یک متن تستی است تا ببینید که بک‌گراند ثابت می‌ماند.</p>
-    <p>اسکرول کنید و بک‌گراند اصلاً تکان نمی‌خورد.</p>
-    <p>می‌توانید هر محتوا و استایلی که خواستید اینجا قرار دهید.</p>
-    <p>...</p>
-    <p>پاراگراف بیشتر برای تست اسکرول.</p>
-    <p>پاراگراف بیشتر برای تست اسکرول.</p>
-    <p>پاراگراف بیشتر برای تست اسکرول.</p>
-    <p>پاراگراف بیشتر برای تست اسکرول.</p>
+  <!-- بک‌گراند -->
+  <div class="background" id="bg"></div>
+  <div class="light-bar"></div>
+
+  <!-- لوگو -->
+  <div class="logo-container">
+    <img src="SarvSiah.jpg" alt="SarvSiah Logo" class="logo" id="mainLogo">
   </div>
+
+  <!-- محتوا -->
+  <div class="content">
+    <div class="block">
+      <h1>Arvand</h1>
+      <div class="lines">
+        <div>This bro is awesome</div>
+        <div>The Best</div>
+        <div>The Strongest</div>
+      </div>
+      <img src="Arvand.jpg" id="imgArvand" alt="Arvand Image">
+    </div>
+    <div class="block">
+      <h1>Mamad</h1>
+      <div class="lines">
+        <div>This guy is just a good boy</div>
+        <div>Loved Allah</div>
+      </div>
+      <img src="mmd.jpg" id="imgMmd" alt="Mamad Image">
+    </div>
+  </div>
+
+  <script>
+    const bg = document.getElementById('bg');
+    const logo = document.getElementById('mainLogo');
+
+    // ۳: پارالاکس موس روی محور X
+    document.addEventListener('mousemove', e => {
+      const ratio = (e.clientX / window.innerWidth - 0.5) * 30; 
+      bg.style.transform = `scale(${currentScale}) translateX(${ratio}px)`;
+    });
+
+    // ۴: زوم و بلور با اسکرول
+    let currentScale = 1.2;
+    window.addEventListener('scroll', () => {
+      const sc = window.scrollY;
+      currentScale = 1.2 + sc * 0.0008;     // کنترل سرعت زوم
+      const blur = 2 + sc * 0.02;           // کنترل سرعت بلور
+      bg.style.transform = `scale(${currentScale}) translateX(0)`;
+      bg.style.filter = `brightness(0.8) blur(${blur}px)`;
+    });
+
+    // افکت کلیک لوگو
+    logo.addEventListener('click', () => {
+      logo.classList.add('clicked');
+      setTimeout(() => logo.classList.remove('clicked'), 400);
+    });
+
+    // ستاره‌ها
+    function makeStar() {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = Math.random() * 3 + 1;
+      s.style.width = s.style.height = `${size}px`;
+      s.style.top  = `${Math.random() * window.innerHeight}px`;
+      s.style.left = `${Math.random() * window.innerWidth}px`;
+      s.style.animationDuration = `${Math.random() * 3 + 2}s`;
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 8000);
+    }
+    setInterval(makeStar, 300);
+
+    // تیلت تصاویر
+    ['imgArvand','imgMmd'].forEach(id=>{
+      const img = document.getElementById(id);
+      img.addEventListener('mousemove', e=>{
+        const r = img.getBoundingClientRect();
+        const x = e.clientX - r.left, y = e.clientY - r.top;
+        const rx = ((x - r.width/2)/r.width)*30;
+        const ry = ((y - r.height/2)/r.height)*-30;
+        img.style.transform = `perspective(800px) rotateY(${rx}deg) rotateX(${ry}deg)`;
+      });
+      img.addEventListener('mouseleave', ()=>{
+        img.style.transform = 'rotateY(0) rotateX(0)';
+      });
+    });
+  </script>
 </body>
 </html>
