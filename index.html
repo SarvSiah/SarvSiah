@@ -160,54 +160,28 @@
     const content = document.getElementById('content');
     const mainLogo = document.getElementById('mainLogo');
 
-    // Mouse Move Parallax
     document.addEventListener('mousemove', e => {
       const x = (e.clientX / window.innerWidth - 0.5) * 20;
       const y = (e.clientY / window.innerHeight - 0.5) * 20;
-
       bg.style.transform = `scale(1.1) translate(${x * -0.5}px, ${y * -0.5}px)`;
       logoContainer.style.transform = `translateX(-50%) translate(${x}px, ${y}px)`;
       content.style.transform = `translate(${x * 0.5}px, ${y * 0.5}px)`;
     });
 
-    // Smooth Scroll Setup
+    let scrollY = 0;
     let targetScroll = 0;
-    let currentScroll = 0;
-    let ticking = false;
+    const ease = 0.1;
 
-    const maxScroll = document.body.scrollHeight - window.innerHeight;
-
-    function smoothScroll() {
-      const dist = targetScroll - currentScroll;
-      currentScroll += dist * 0.1;
-      if (Math.abs(dist) < 0.5) currentScroll = targetScroll;
-
-      window.scrollTo(0, currentScroll);
-
-      const opacity = Math.max(0, 1 - currentScroll / 300);
-      logoContainer.style.opacity = opacity;
-
-      const blur = Math.min(8, currentScroll / 100);
-      bg.style.filter = `blur(${blur}px) brightness(0.8)`;
-      bg.style.transform = `scale(1.1) translate(0, ${currentScroll / -20}px)`;
-
-      if (currentScroll !== targetScroll) {
-        requestAnimationFrame(smoothScroll);
-      } else {
-        ticking = false;
-      }
+    const smoothScroll = () => {
+      scrollY += (targetScroll - scrollY) * ease;
+      document.body.style.transform = `translateY(${-scrollY}px)`;
+      requestAnimationFrame(smoothScroll);
     }
+    smoothScroll();
 
-    window.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      targetScroll += e.deltaY * 0.3;
-      targetScroll = Math.max(0, Math.min(targetScroll, maxScroll));
-
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(smoothScroll);
-      }
-    }, { passive: false });
+    window.addEventListener('wheel', e => {
+      targetScroll += e.deltaY;
+    }, { passive: true });
 
     mainLogo.addEventListener('click', () => {
       mainLogo.classList.add('clicked');
