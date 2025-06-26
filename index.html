@@ -1,228 +1,84 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>SarvSiah</title>
-  <style>
-    html, body {
-      margin: 0; padding: 0;
-      background: #000; color: #fff;
-      font-family: sans-serif;
-      overflow-y: hidden;
-      min-height: 200vh;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خان دایی و خوارزاوون</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@700&display=swap');
 
-    .background {
-      position: fixed; top: -10%; left: -10%;
-      width: 120%; height: 120%;
-      background: url('mountains.jpg') center/cover no-repeat;
-      filter: brightness(0.8) blur(2px);
-      will-change: transform, filter;
-      z-index: 0;
-      pointer-events: none;
-      transition: filter 0.2s ease, transform 0.2s ease;
-    }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Vazirmatn', sans-serif;
+            background-image: url('1.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            backdrop-filter: brightness(0.7);
+        }
 
-    .logo-container {
-      position: fixed; top: 40px; left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      transition: opacity 0.5s ease;
-      pointer-events: auto;
-    }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 50px;
+            color: #fff;
+            text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff, 0 0 40px #00f0ff;
+            animation: glow 2s infinite alternate;
+        }
 
-    .logo {
-      width: 280px;
-      transition: transform 0.3s ease, filter 0.3s ease;
-      user-select: none;
-      cursor: pointer;
-    }
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff, 0 0 40px #00f0ff;
+            }
+            to {
+                text-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff, 0 0 60px #ff00ff;
+            }
+        }
 
-    .logo.clicked {
-      transform: scale(1.2);
-      filter: drop-shadow(0 0 35px #ffffffaa);
-    }
+        .gallery {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 30px;
+            padding: 20px;
+            flex-wrap: wrap;
+        }
 
-    .content {
-      position: absolute;
-      top: 550px;
-      display: flex;
-      justify-content: center;
-      gap: 120px;
-      width: 100%;
-      z-index: 5;
-    }
+        .gallery img {
+            width: 220px;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
 
-    .block {
-      width: 400px;
-      text-align: center;
-    }
+        .gallery img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.9);
+        }
 
-    .block h1 {
-      font-size: 32px;
-      margin-bottom: 10px;
-      border-bottom: 2px solid white;
-      padding-bottom: 5px;
-    }
-
-    .block .lines {
-      font-size: 18px;
-      margin: 20px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .block img {
-      width: 300px;
-      height: 300px;
-      border-radius: 20px;
-      object-fit: cover;
-      box-shadow: 0 0 15px rgba(255,255,255,0.6);
-      transform: scaleX(-1);
-      perspective: 800px;
-      transition: transform 0.3s ease;
-      cursor: grab;
-    }
-
-    .star {
-      position: fixed;
-      background: white;
-      border-radius: 50%;
-      opacity: 0.8;
-      animation: twinkle infinite ease-in-out;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.8; }
-      50%      { opacity: 0.2; }
-    }
-
-    .light-bar {
-      position: fixed; bottom: 0; left: 0;
-      width: 100%; height: 80px;
-      background: linear-gradient(90deg,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,.4) 50%,
-        rgba(255,255,255,0) 100%);
-      filter: blur(10px);
-      animation: slideLight 5s linear infinite;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    @keyframes slideLight {
-      0%   { background-position: 0 0; }
-      100% { background-position: 200% 0; }
-    }
-  </style>
+        /* عکس وسط کمی بالاتر باشه */
+        .gallery img.center {
+            margin-bottom: 40px;
+        }
+    </style>
 </head>
 <body>
-  <div class="background" id="bg"></div>
-  <div class="light-bar"></div>
 
-  <div class="logo-container" id="logoContainer">
-    <img src="SarvSiah.jpg" alt="SarvSiah Logo" class="logo" id="mainLogo" />
-  </div>
+    <h1>خان دایی و خوارزاوون</h1>
 
-  <div class="content">
-    <div class="block">
-      <h1>Arvand</h1>
-      <div class="lines">
-        <div>This bro is awsom</div>
-        <div>The Best</div>
-        <div>The Strongest</div>
-      </div>
-      <img src="Arvand.jpg" id="imgArvand" alt="Arvand Image" />
+    <div class="gallery">
+        <img src="3.jpg" alt="عکس ۳">
+        <img src="2.jpg" alt="عکس ۲" class="center">
+        <img src="4.jpg" alt="عکس ۴">
     </div>
 
-    <div class="block">
-      <h1>Mamad</h1>
-      <div class="lines">
-        <div>This guy is just a good boy</div>
-        <div>Loved Allah</div>
-      </div>
-      <img src="mmd.jpg" id="imgMmd" alt="Mamad Image" />
-    </div>
-  </div>
-
-  <script>
-    const bg = document.getElementById('bg');
-    const logoContainer = document.getElementById('logoContainer');
-    const mainLogo = document.getElementById('mainLogo');
-
-    let targetScroll = 0;
-    let currentScroll = 0;
-    let ticking = false;
-    const maxScroll = document.body.scrollHeight - window.innerHeight;
-
-    function smoothScroll() {
-      const dist = targetScroll - currentScroll;
-      currentScroll += dist * 0.1;
-      if (Math.abs(dist) < 0.5) currentScroll = targetScroll;
-
-      window.scrollTo(0, currentScroll);
-      let opacity = 1 - currentScroll / 300;
-      if (opacity < 0) opacity = 0;
-      logoContainer.style.opacity = opacity;
-
-      const blur = Math.min(8, currentScroll / 100);
-      bg.style.filter = `blur(${blur}px) brightness(0.8)`;
-      bg.style.transform = `translate(0, 0) scale(${1 + currentScroll / 1000})`;
-
-      if (currentScroll !== targetScroll) {
-        requestAnimationFrame(smoothScroll);
-      } else {
-        ticking = false;
-      }
-    }
-
-    window.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      targetScroll += e.deltaY * 0.3;
-      if (targetScroll < 0) targetScroll = 0;
-      if (targetScroll > maxScroll) targetScroll = maxScroll;
-
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(smoothScroll);
-      }
-    }, { passive: false });
-
-    mainLogo.addEventListener('click', () => {
-      mainLogo.classList.add('clicked');
-      setTimeout(() => mainLogo.classList.remove('clicked'), 400);
-    });
-
-    function makeStar() {
-      const s = document.createElement('div');
-      s.className = 'star';
-      const size = Math.random() * 3 + 1;
-      s.style.width = s.style.height = size + 'px';
-      s.style.top = Math.random() * window.innerHeight + 'px';
-      s.style.left = Math.random() * window.innerWidth + 'px';
-      s.style.animationDuration = (Math.random() * 3 + 2) + 's';
-      document.body.appendChild(s);
-      setTimeout(() => s.remove(), 8000);
-    }
-    setInterval(makeStar, 300);
-
-    ['imgArvand', 'imgMmd'].forEach(id => {
-      const img = document.getElementById(id);
-      img.addEventListener('mousemove', e => {
-        const r = img.getBoundingClientRect();
-        const x = e.clientX - r.left;
-        const y = e.clientY - r.top;
-        const rx = ((x - r.width / 2) / r.width) * 30;
-        const ry = ((y - r.height / 2) / r.height) * -30;
-        img.style.transform = `perspective(800px) rotateY(${rx}deg) rotateX(${ry}deg) scaleX(-1)`;
-      });
-      img.addEventListener('mouseleave', () => {
-        img.style.transform = 'scaleX(-1)';
-      });
-    });
-  </script>
 </body>
 </html>
