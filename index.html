@@ -11,7 +11,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Vazirmatn', sans-serif;
-            background-image: url('1.jpg');
+            background-image: url('images/1.jpg'); /* مسیر عکس پس‌زمینه */
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -21,23 +21,26 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
             backdrop-filter: brightness(0.7);
         }
 
         h1 {
-            font-size: 3rem;
+            font-size: 2rem; /* کوچیک‌تر */
             margin-bottom: 50px;
             color: #fff;
-            text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff, 0 0 40px #00f0ff;
-            animation: glow 2s infinite alternate;
+            text-shadow: 0 0 10px white, 0 0 20px white, 0 0 40px white;
+            animation: glow 5s infinite alternate ease-in-out;
         }
 
         @keyframes glow {
-            from {
-                text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff, 0 0 40px #00f0ff;
+            0% {
+                transform: scale(1);
+                text-shadow: 0 0 10px white, 0 0 20px white, 0 0 40px white;
             }
-            to {
-                text-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff, 0 0 60px #ff00ff;
+            100% {
+                transform: scale(1.1);
+                text-shadow: 0 0 20px white, 0 0 30px white, 0 0 50px white;
             }
         }
 
@@ -64,7 +67,6 @@
             box-shadow: 0 0 25px rgba(0, 255, 255, 0.9);
         }
 
-        /* عکس وسط کمی بالاتر باشه */
         .gallery img.center {
             margin-bottom: 40px;
         }
@@ -75,9 +77,9 @@
     <h1>خان دایی و خوارزاوون</h1>
 
     <div class="gallery">
-        <img src="3.jpg" alt="عکس ۳">
-        <img src="2.jpg" alt="عکس ۲" class="center">
-        <img src="4.jpg" alt="عکس ۴">
+        <img src="images/3.jpg" alt="عکس ۳">
+        <img src="images/2.jpg" alt="عکس ۲" class="center">
+        <img src="images/4.jpg" alt="عکس ۴">
     </div>
 
 </body>
