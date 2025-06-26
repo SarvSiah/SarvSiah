@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خان دایی و خوارزاوون</title>
+    <title>شرکت خدمات شست و شوی خان دایی و خوارزاوون</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@700&display=swap');
 
@@ -11,7 +11,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Vazirmatn', sans-serif;
-            background-image: url('1.jpg'); /* عکس پس‌زمینه */
+            background-image: url('1.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -76,7 +76,14 @@
             flex-wrap: wrap;
         }
 
-        .gallery img {
+        .image-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .image-container img {
             width: 220px;
             height: auto;
             border-radius: 15px;
@@ -85,13 +92,27 @@
             cursor: pointer;
         }
 
-        .gallery img:hover {
+        .image-container img:hover {
             transform: scale(1.05);
             box-shadow: 0 0 25px rgba(0, 255, 255, 0.9);
         }
 
-        .gallery img.center {
-            margin-bottom: 40px;
+        .label {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            padding: 5px 15px;
+            border-radius: 12px;
+            position: absolute;
+            top: -30px;
+            font-size: 1rem;
+            color: white;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .image-container:hover .label {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.9);
         }
 
         .gallery .custom-box {
@@ -113,11 +134,17 @@
             transform: scale(1.05);
             box-shadow: 0 0 25px rgba(0, 255, 255, 0.9);
         }
+
+        /* عکس وسط بالاتر باشه */
+        .center {
+            margin-bottom: 60px;
+        }
+
     </style>
 </head>
 <body>
 
-    <h1>خان دایی و خوارزاوون</h1>
+    <h1>شرکت خدمات شست و شوی خان دایی و خوارزاوون</h1>
 
     <div class="box">
         <p>خدمات شست و شوی منزل در سریع‌ترین زمان ممکن و بهترین مکان ممکن</p>
@@ -128,9 +155,22 @@
     </div>
 
     <div class="gallery">
-        <img src="IMG_20250609_194943.jpg" alt="عکس آدم راست">
-        <img src="101.jpg" alt="عکس آدم وسط" class="center">
+
+        <!-- عکس آدم سمت راست -->
+        <div class="image-container">
+            <div class="label">خان دایی</div>
+            <img src="IMG_20250609_194943.jpg" alt="خان دایی">
+        </div>
+
+        <!-- عکس وسط -->
+        <div class="image-container center">
+            <div class="label">دایی</div>
+            <img src="101.jpg" alt="دایی">
+        </div>
+
+        <!-- باکس دیدار حضوری -->
         <div class="custom-box">دیدار حضوری</div>
+
     </div>
 
 </body>
