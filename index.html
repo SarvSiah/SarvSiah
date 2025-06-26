@@ -93,6 +93,26 @@
         .gallery img.center {
             margin-bottom: 40px;
         }
+
+        .gallery .custom-box {
+            width: 220px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+            font-size: 1.3rem;
+            color: white;
+            cursor: default;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .gallery .custom-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.9);
+        }
     </style>
 </head>
 <body>
@@ -108,9 +128,8 @@
     </div>
 
     <div class="gallery">
-        <img src="images/3.jpg" alt="عکس ۳">
-        <img src="images/2.jpg" alt="عکس ۲" class="center">
-        <img src="images/4.jpg" alt="عکس ۴">
+        <img src="images/101.jpg" alt="عکس ۱۰۱" class="center">
+        <div class="custom-box">دیدار حضوری</div>
     </div>
 
 </body>
