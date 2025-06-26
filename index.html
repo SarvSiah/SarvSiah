@@ -7,6 +7,10 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@700&display=swap');
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -22,8 +26,8 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: center;
-            backdrop-filter: brightness(0.7);
             padding: 50px 20px;
+            overflow-x: hidden;
         }
 
         h1 {
@@ -52,19 +56,13 @@
             border-radius: 15px;
             backdrop-filter: blur(10px);
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
-            transition: transform 0.3s, box-shadow 0.3s;
             max-width: 400px;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .box:hover {
             transform: scale(1.02);
             box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
-        }
-
-        .box p {
-            margin: 0;
-            font-size: 1.2rem;
-            color: white;
         }
 
         .gallery {
@@ -81,10 +79,11 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: transform 0.3s;
         }
 
         .image-container img {
-            width: 220px;
+            width: 200px;
             height: auto;
             border-radius: 15px;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
@@ -115,8 +114,8 @@
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.9);
         }
 
-        .gallery .custom-box {
-            width: 220px;
+        .custom-box {
+            width: 200px;
             height: 300px;
             display: flex;
             justify-content: center;
@@ -130,16 +129,15 @@
             transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .gallery .custom-box:hover {
+        .custom-box:hover {
             transform: scale(1.05);
             box-shadow: 0 0 25px rgba(0, 255, 255, 0.9);
         }
 
-        /* عکس وسط بالاتر باشه */
+        /* عکس دوم (دایی) کمی بالاتر باشه */
         .center {
             margin-bottom: 60px;
         }
-
     </style>
 </head>
 <body>
@@ -156,20 +154,29 @@
 
     <div class="gallery">
 
-        <!-- عکس آدم سمت راست -->
+        <!-- باکس دیدار حضوری -->
         <div class="image-container">
-            <div class="label">خان دایی</div>
-            <img src="IMG_20250609_194943.jpg" alt="خان دایی">
+            <div class="label">دایی</div>
+            <div class="custom-box">دیدار حضوری</div>
         </div>
 
-        <!-- عکس وسط -->
+        <!-- عکس سوم (آدم) -->
         <div class="image-container center">
             <div class="label">دایی</div>
             <img src="101.jpg" alt="دایی">
         </div>
 
-        <!-- باکس دیدار حضوری -->
-        <div class="custom-box">دیدار حضوری</div>
+        <!-- عکس دوم (آدم) -->
+        <div class="image-container">
+            <div class="label">خوارزا</div>
+            <img src="IMG_20250609_194943.jpg" alt="خوارزا">
+        </div>
+
+        <!-- عکس چهارم (آدم) -->
+        <div class="image-container">
+            <div class="label">خوارزا</div>
+            <img src="IMG_20250609_194943.jpg" alt="خوارزا">
+        </div>
 
     </div>
 
