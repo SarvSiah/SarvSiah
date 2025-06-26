@@ -37,6 +37,15 @@
             100% { transform: scale(1); text-shadow: 0 0 10px white; }
         }
 
+        .emoji {
+            animation: blink 1.5s infinite alternate;
+        }
+
+        @keyframes blink {
+            0% { opacity: 0.3; filter: brightness(0.7); }
+            100% { opacity: 1; filter: brightness(1.5); }
+        }
+
         .box {
             background: rgba(255, 255, 255, 0.15);
             padding: 20px 30px;
@@ -152,7 +161,12 @@
 </head>
 <body>
 
-    <h1>شرکت خدمات شست و شوی خان دایی و خوارزاوون 🧽🧼🚿⛵️</h1>
+    <h1>شرکت خدمات شست و شوی خان دایی و خوارزاوون 
+        <span class="emoji">🧽</span> 
+        <span class="emoji">🧼</span> 
+        <span class="emoji">🚿</span> 
+        <span class="emoji">⛵️</span>
+    </h1>
 
     <div class="box">
         <p>🧼 خدمات شست و شوی منزل در سریع‌ترین زمان ممکن 🚀 و بهترین مکان ممکن 🏠</p>
