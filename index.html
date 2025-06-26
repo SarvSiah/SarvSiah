@@ -20,14 +20,15 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             backdrop-filter: brightness(0.7);
+            padding: 50px 20px;
         }
 
         h1 {
-            font-size: 2rem; /* کوچیک‌تر */
-            margin-bottom: 50px;
+            font-size: 2rem;
+            margin-bottom: 30px;
             color: #fff;
             text-shadow: 0 0 10px white, 0 0 20px white, 0 0 40px white;
             animation: glow 5s infinite alternate ease-in-out;
@@ -44,12 +45,34 @@
             }
         }
 
+        .box {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+            max-width: 400px;
+        }
+
+        .box:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+        }
+
+        .box p {
+            margin: 0;
+            font-size: 1.2rem;
+            color: white;
+        }
+
         .gallery {
             display: flex;
             justify-content: center;
             align-items: flex-end;
             gap: 30px;
-            padding: 20px;
+            padding: 30px 20px;
             flex-wrap: wrap;
         }
 
@@ -75,6 +98,14 @@
 <body>
 
     <h1>خان دایی و خوارزاوون</h1>
+
+    <div class="box">
+        <p>خدمات شست و شوی منزل در سریع‌ترین زمان ممکن و بهترین مکان ممکن</p>
+    </div>
+
+    <div class="box">
+        <p>شروع قیمت از 1,000,000 تومان به بالا با در نظر گرفتن متراژ</p>
+    </div>
 
     <div class="gallery">
         <img src="images/3.jpg" alt="عکس ۳">
